@@ -9,6 +9,9 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: rootDir,
   },
+  async redirects() {
+    return [{ source: "/platform", destination: "/platform/clinics", permanent: false }];
+  },
 };
 
 export default nextConfig;
