@@ -48,7 +48,6 @@ export default function PlatformClinicsPage() {
   const [clinicName, setClinicName] = useState("");
   const [managerEmail, setManagerEmail] = useState("");
   const [managerPassword, setManagerPassword] = useState("");
-  const [licenseKey, setLicenseKey] = useState("");
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -70,7 +69,6 @@ export default function PlatformClinicsPage() {
     setClinicName("");
     setManagerEmail("");
     setManagerPassword("");
-    setLicenseKey("");
     setError("");
     setModalOpen(true);
   }
@@ -87,7 +85,6 @@ export default function PlatformClinicsPage() {
         clinicName: clinicName.trim(),
         managerEmail: managerEmail.trim(),
         managerPassword,
-        licenseKey: licenseKey.trim() || undefined,
       });
       setCreated(result);
       setModalOpen(false);
@@ -119,7 +116,7 @@ export default function PlatformClinicsPage() {
       `اسم العيادة: ${created.clinic.name}`,
       `البريد: ${created.managerEmail}`,
       `كلمة المرور: ${created.managerPassword}`,
-      created.licenseActivated ? `الترخيص: مفعّل (${created.clinic.licenseTier})` : "الترخيص: غير مفعّل",
+      created.licenseActivated ? `الترخيص: مفعّل تلقائياً (${created.clinic.licenseTier})` : "الترخيص: غير مفعّل",
       "",
       "بعد تسجيل الدخول يختار المدير دور «مالك» ويضيف باقي الكادر من صفحة الكادر.",
     ].join("\n");
@@ -237,7 +234,8 @@ export default function PlatformClinicsPage() {
       <Modal open={modalOpen} onClose={() => setModalOpen(false)} title="إنشاء عيادة جديدة">
         <ModalBody>
           <p className="mb-4 text-sm text-[#6b7c85]">
-            سيتم إنشاء حساب مدير (ADMIN) للعيادة. يمكنك لاحقاً إضافة مستخدمين وصلاحيات من صفحة إدارة العيادة.
+            سيتم إنشاء حساب مدير (ADMIN) للعيادة وتفعيل ترخيص خطة «عيادة كاملة» تلقائياً.
+            يمكنك لاحقاً إضافة مستخدمين وصلاحيات من صفحة إدارة العيادة.
           </p>
           {error && modalOpen && (
             <div className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
@@ -267,17 +265,6 @@ export default function PlatformClinicsPage() {
                 placeholder="8 أحرف على الأقل"
               />
             </div>
-            <div>
-              <label className="mb-1 block text-sm font-medium">مفتاح الترخيص (اختياري)</label>
-              <Input
-                value={licenseKey}
-                onChange={(e) => setLicenseKey(e.target.value)}
-                placeholder="اتركه فارغاً أو DANTAL-DEV-CLINIC"
-              />
-              <p className="mt-1 text-xs text-[#9ca3af]">
-                إذا ظهر خطأ في الترخيص، اترك الحقل فارغاً وأعد المحاولة.
-              </p>
-            </div>
           </div>
         </ModalBody>
         <ModalFooter>
@@ -306,6 +293,12 @@ export default function PlatformClinicsPage() {
                 </p>
                 <p>
                   <span className="font-semibold">كلمة المرور:</span> {created.managerPassword}
+                </p>
+                <p>
+                  <span className="font-semibold">الترخيص:</span>{" "}
+                  {created.licenseActivated
+                    ? `مفعّل تلقائياً (${created.clinic.licenseTier || "clinic"})`
+                    : "غير مفعّل"}
                 </p>
               </div>
             </div>
