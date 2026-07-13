@@ -30,13 +30,22 @@ export default function LoginPage() {
   const [clinicNameInput, setClinicNameInput] = useState(clinicName);
 
   async function finishBackendAuth(cloud: CloudSyncConfig) {
-    const exported = await pullFromBackend(cloud);
-    const merged = exported || mergeExportedDb({}, cloud);
+    let merged;
+    try {
+      const exported = await pullFromBackend(cloud);
+      merged = exported || mergeExportedDb({}, cloud);
+    } catch {
+      merged = mergeExportedDb({}, cloud);
+    }
     replaceDb(merged);
     if (!merged.patients.length && !merged.meta.demoSeeded) {
       ensureSeeded();
     }
-    await pushToBackend(useDbStore.getState().db);
+    try {
+      await pushToBackend(useDbStore.getState().db);
+    } catch {
+      /* first-time sync may fail; login should still succeed */
+    }
     router.push("/role");
   }
 
@@ -106,11 +115,17 @@ export default function LoginPage() {
                 : " سجّل الدخول لإدارة مواعيدك ومتابعة عيادتك."}
             </p>
             {backendMode && (
-              <p className="mt-2 text-xs text-[#366F7F]">
-                متصل بالخادم: {Cloud.base()}
-                <span className="mx-1">·</span>
-                مدير المنصة: superadmin@dantal.local
-              </p>
+              <div className="mt-2 space-y-1 text-xs text-[#366F7F]">
+                <p>متصل بالخادم: {Cloud.base()}</p>
+                <p>
+                  <span className="font-semibold">مدير المنصة (لإضافة عيادات):</span>{" "}
+                  superadmin@dantal.clinic
+                </p>
+                <p className="text-[#6b7c85]">
+                  زر «إنشاء عيادة جديدة» أدناه للتسجيل الذاتي فقط. لإضافة عيادة من لوحة المنصة
+                  سجّل دخول مدير المنصة أولاً.
+                </p>
+              </div>
             )}
 
             <div className="mt-9 space-y-5">

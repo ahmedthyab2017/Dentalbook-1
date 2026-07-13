@@ -34,7 +34,13 @@ export default function PlatformLayout({ children }: { children: React.ReactNode
     guard();
   }, [router]);
 
-  if (!ready) return null;
+  if (!ready) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[#f0f5f7] text-sm text-[#6b7c85]">
+        جاري التحقق من صلاحيات مدير المنصة...
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#f0f5f7]">

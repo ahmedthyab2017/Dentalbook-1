@@ -62,9 +62,36 @@ export async function pushToBackend(db: DentistDb): Promise<void> {
   await ClinicApi.importAll(db);
 }
 
+const API_ERROR_AR: Record<string, string> = {
+  UNAUTHORIZED: "البريد الإلكتروني أو كلمة المرور غير صحيحة",
+  EMAIL_TAKEN: "هذا البريد مستخدم مسبقاً — جرّب بريداً آخر",
+  LICENSE_INVALID: "مفتاح الترخيص غير صالح — اتركه فارغاً أو استخدم DANTAL-DEV-CLINIC",
+  LICENSE_UNAVAILABLE: "مفتاح الترخيص منتهٍ أو مستنفد",
+  FORBIDDEN: "ليس لديك صلاحية لهذه العملية",
+};
+
 export function apiErrorMessage(err: unknown): string {
-  if (err && typeof err === "object" && "message" in err) {
-    return String((err as { message: string }).message);
+  if (!err || typeof err !== "object") return "فشل الاتصال بالخادم";
+
+  const body = err as {
+    message?: string;
+    errors?: string[];
+    code?: string;
+  };
+
+  const code = body.errors?.[0] || body.code;
+  if (code && API_ERROR_AR[code]) return API_ERROR_AR[code];
+
+  const raw = body.message?.trim() || "";
+  if (/invalid email or password/i.test(raw)) return API_ERROR_AR.UNAUTHORIZED;
+  if (/email is already registered/i.test(raw)) return API_ERROR_AR.EMAIL_TAKEN;
+  if (/invalid license key/i.test(raw)) return API_ERROR_AR.LICENSE_INVALID;
+  if (/temporarily locked/i.test(raw)) return "الحساب مقفول مؤقتاً بسبب محاولات خاطئة — انتظر 15 دقيقة";
+  if (/account is disabled/i.test(raw)) return "الحساب معطّل — تواصل مع مدير المنصة";
+  if (/validation failed/i.test(raw) && body.errors?.length) {
+    return "تحقق من البيانات: " + body.errors.join(" · ");
   }
+  if (raw) return raw;
+
   return "فشل الاتصال بالخادم";
 }
