@@ -10,16 +10,15 @@ import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { Cloud } from "@/lib/cloud";
 import { apiErrorMessage, isBackendEnabled, mergeExportedDb, pullFromBackend, pushToBackend } from "@/lib/backend";
+import { APP_BRAND } from "@/lib/constants";
 import type { CloudSyncConfig } from "@/types/db";
 
 const TEAL = "#366F7F";
 
-const PLATFORM_DENIED_MSG =
-  "لوحة المنصة لمدير النظام فقط. استخدم superadmin@dantal.clinic وليس بريد مدير العيادة.";
+const PLATFORM_DENIED_MSG = "لوحة المنصة لمدير النظام فقط. سجّل دخولك بحساب مدير المنصة.";
 
 export default function LoginPage() {
   const router = useRouter();
-  const clinicName = useDbStore((s) => s.db.meta.clinicName);
   const updateMeta = useDbStore((s) => s.updateMeta);
   const replaceDb = useDbStore((s) => s.replaceDb);
   const ensureSeeded = useDbStore((s) => s.ensureSeeded);
@@ -30,7 +29,7 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [registerMode, setRegisterMode] = useState(false);
-  const [clinicNameInput, setClinicNameInput] = useState(clinicName);
+  const [clinicNameInput, setClinicNameInput] = useState("");
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -78,7 +77,7 @@ export default function LoginPage() {
         };
         updateMeta({ cloud });
         if (registerMode) {
-          await Cloud.register(clinicNameInput.trim() || clinicName, email.trim(), password);
+          await Cloud.register(clinicNameInput.trim() || APP_BRAND, email.trim(), password);
         } else {
           await Cloud.login(email.trim(), password);
           const profile = await Cloud.me();
@@ -119,24 +118,11 @@ export default function LoginPage() {
             </h1>
             <p className="mt-4 max-w-sm text-[15px] leading-relaxed text-[#6b7c85]">
               مرحباً بك في{" "}
-              <span className="font-semibold text-[#374151]">{clinicName}</span>.
-              {backendMode
-                ? " سجّل الدخول بحسابك على الخادم."
+              <span className="font-semibold text-[#374151]">{APP_BRAND}</span>.
+              {registerMode
+                ? " أنشئ حساب عيادتك للبدء."
                 : " سجّل الدخول لإدارة مواعيدك ومتابعة عيادتك."}
             </p>
-            {backendMode && (
-              <div className="mt-2 space-y-1 text-xs text-[#366F7F]">
-                <p>متصل بالخادم: {Cloud.base()}</p>
-                <p>
-                  <span className="font-semibold">مدير المنصة (لإضافة عيادات):</span>{" "}
-                  superadmin@dantal.clinic
-                </p>
-                <p className="text-[#6b7c85]">
-                  زر «إنشاء عيادة جديدة» أدناه للتسجيل الذاتي فقط. لإضافة عيادة من لوحة المنصة
-                  سجّل دخول مدير المنصة أولاً.
-                </p>
-              </div>
-            )}
 
             <div className="mt-9 space-y-5">
               {backendMode && registerMode && (
@@ -251,7 +237,7 @@ export default function LoginPage() {
           </div>
 
           <p className="mt-10 text-xs text-[#9ca3af]">
-            ©{new Date().getFullYear()} {clinicName}. جميع الحقوق محفوظة.
+            ©{new Date().getFullYear()} {APP_BRAND}. جميع الحقوق محفوظة.
           </p>
         </div>
 

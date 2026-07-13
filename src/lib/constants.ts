@@ -103,3 +103,6 @@ export const IMPLEMENTED_PAGES = new Set([
 
 export const TEST_LOGIN_EMAIL = "admin";
 export const TEST_LOGIN_PASSWORD = "admin123";
+
+export const APP_BRAND = "dentalbook";
+export const APP_BRAND_AR = "دنتال بوك";

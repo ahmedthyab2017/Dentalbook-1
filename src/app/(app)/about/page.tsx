@@ -9,12 +9,11 @@ export default function AboutPage() {
           <h1 className="page-title">عن التطبيق</h1>
         </div>
         <div id="about-body" className="about-body">
-          <div className="about-logo">M</div>
-          <h2>المختصر دنتال — Mukhtasar Dental</h2>
+          <div className="about-logo">D</div>
+          <h2>dentalbook</h2>
           <p className="muted">v2.10.0 • Next.js Edition</p>
           <p className="mt-3">
             نظام إدارة عيادة أسنان متكامل — مواعيد، مرضى، خطط علاج، مالية، ومتابعة.
-            البيانات محفوظة محلياً على جهازك لضمان الخصوصية.
           </p>
           <p className="muted mt-3">تطوير: Digital Innovation Foundation</p>
           <a

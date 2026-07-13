@@ -1,8 +1,8 @@
 {
   "id": "/mukhtasar-dental/",
-  "name": "المختصر دنتال — Mukhtasar Dental",
-  "short_name": "المختصر",
-  "description": "نظام إدارة عيادة الأسنان — يعمل بلا إنترنت، بياناتك على جهازك",
+  "name": "dentalbook",
+  "short_name": "dentalbook",
+  "description": "نظام إدارة عيادة الأسنان",
   "lang": "ar",
   "dir": "rtl",
   "start_url": "./",

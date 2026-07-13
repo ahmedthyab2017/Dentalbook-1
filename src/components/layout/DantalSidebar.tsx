@@ -31,7 +31,7 @@ import {
   X,
   type LucideIcon,
 } from "lucide-react";
-import { SECRETARY_PAGES, IMPLEMENTED_PAGES } from "@/lib/constants";
+import { SECRETARY_PAGES, IMPLEMENTED_PAGES, APP_BRAND } from "@/lib/constants";
 import { useLayoutStore } from "@/stores/useLayoutStore";
 import { useUiPrefsStore } from "@/stores/useUiPrefsStore";
 import { DantalLogo } from "@/components/layout/DantalLogo";
@@ -268,7 +268,7 @@ export function DantalSidebar({
           </div>
           {!showCollapsed && (
             <div className="min-w-0 flex-1">
-              <div className="truncate text-lg font-bold tracking-tight text-white">Dantal</div>
+              <div className="truncate text-lg font-bold tracking-tight text-white">{APP_BRAND}</div>
               <div className="truncate text-[11px] font-medium uppercase tracking-[0.12em] text-white/65">
                 {lang === "ar" ? clinicName || "إدارة العيادة" : "Dental Clinic Management"}
               </div>

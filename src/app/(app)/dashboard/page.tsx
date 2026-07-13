@@ -10,6 +10,7 @@ import { Card, CardHeader, CardTitle, CardBody, Button } from "@/components/ds";
 import { useSessionStore } from "@/stores/useSessionStore";
 import { useQuickFlowStore } from "@/stores/useQuickFlowStore";
 import { greeting } from "@/lib/format";
+import { APP_BRAND } from "@/lib/constants";
 import { slideUp } from "@/lib/motion";
 import { BarChart3, CalendarPlus, Sparkles, UserPlus, Zap } from "lucide-react";
 
@@ -34,7 +35,7 @@ export default function DashboardPage() {
           <div>
             <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-semibold text-white/90 backdrop-blur-sm">
               <Sparkles className="h-3.5 w-3.5" />
-              Dantal · لوحة التحكم
+              {APP_BRAND} · لوحة التحكم
             </div>
             <h1 className="text-2xl font-bold tracking-tight text-white md:text-3xl">
               {greeting()}

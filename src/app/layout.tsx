@@ -17,10 +17,10 @@ const tajawal = Tajawal({
 });
 
 export const metadata: Metadata = {
-  title: "Dantal — Dental Clinic Management",
+  title: "dentalbook — Dental Clinic Management",
   description: "Premium dental clinic management platform",
   manifest: "/manifest.json",
-  applicationName: "Dantal",
+  applicationName: "dentalbook",
   keywords: ["dental", "clinic", "pwa", "management"],
   icons: [
     { rel: "icon", url: "/icon.svg" },
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Dantal",
+    title: "dentalbook",
   },
 };
 

@@ -67,7 +67,7 @@ const API_ERROR_AR: Record<string, string> = {
   EMAIL_TAKEN: "هذا البريد مستخدم مسبقاً — جرّب بريداً آخر",
   LICENSE_INVALID: "مفتاح الترخيص غير صالح — اتركه فارغاً أو استخدم DANTAL-DEV-CLINIC",
   LICENSE_UNAVAILABLE: "مفتاح الترخيص منتهٍ أو مستنفد",
-  FORBIDDEN: "هذا القسم لمدير المنصة فقط — سجّل دخولك بـ superadmin@dantal.clinic",
+  FORBIDDEN: "هذا القسم لمدير المنصة فقط — سجّل دخولك بحساب مدير النظام",
 };
 
 export function isPlatformForbidden(err: unknown): boolean {

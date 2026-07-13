@@ -7,8 +7,8 @@ import { uid } from "./id";
 export function createDefaultDb(): DentistDb {
   return {
     meta: {
-      clinicName: "سوران دنتال",
-      clinicNameEn: "Soran Dental",
+      clinicName: "dentalbook",
+      clinicNameEn: "dentalbook",
       clinicAddress: "الفلوجة — العراق",
       clinicPhone: "009647810151042",
       ownerPin: "1234",
