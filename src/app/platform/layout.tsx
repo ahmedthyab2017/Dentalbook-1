@@ -46,7 +46,7 @@ export default function PlatformLayout({ children }: { children: React.ReactNode
             </div>
             <div>
               <p className="text-sm font-bold text-[#366F7F]">لوحة تحكم المنصة</p>
-              <p className="text-xs text-[#6b7c85]">إدارة العيادات والتراخيص</p>
+              <p className="text-xs text-[#6b7c85]">إدارة العيادات والمستخدمين والصلاحيات</p>
             </div>
           </div>
           <div className="flex items-center gap-3">

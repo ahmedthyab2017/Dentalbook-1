@@ -42,3 +42,5 @@ next-env.d.ts
 
 # Backend API — separate repo: Dental-book-3
 /demo/
+
+.vercel

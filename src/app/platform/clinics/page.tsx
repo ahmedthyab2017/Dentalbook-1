@@ -1,8 +1,9 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Building2, Check, Copy, Plus, Power, RefreshCw } from "lucide-react";
+import { Building2, Check, Copy, Plus, Power, RefreshCw, Settings2 } from "lucide-react";
 import {
   Badge,
   Button,
@@ -133,7 +134,7 @@ export default function PlatformClinicsPage() {
         <div>
           <h1 className="text-2xl font-bold text-[#1f2937]">إدارة العيادات</h1>
           <p className="mt-1 text-sm text-[#6b7c85]">
-            أنشئ عيادة جديدة مع حساب المدير — المدير يضيف باقي الموظفين من داخل العيادة.
+            أنشئ عيادات جديدة وادخل لكل عيادة لإدارة المديرين والصلاحيات.
           </p>
         </div>
         <div className="flex gap-2">
@@ -207,15 +208,23 @@ export default function PlatformClinicsPage() {
                     )}
                   </TableCell>
                   <TableCell>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      disabled={busy}
-                      onClick={() => toggleActive(clinic)}
-                    >
-                      <Power className="h-4 w-4" />
-                      {clinic.active ? "إيقاف" : "تفعيل"}
-                    </Button>
+                    <div className="flex flex-wrap gap-2">
+                      <Link href={`/platform/clinics/${clinic.id}`}>
+                        <Button variant="soft" size="sm">
+                          <Settings2 className="h-4 w-4" />
+                          إدارة
+                        </Button>
+                      </Link>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        disabled={busy}
+                        onClick={() => toggleActive(clinic)}
+                      >
+                        <Power className="h-4 w-4" />
+                        {clinic.active ? "إيقاف" : "تفعيل"}
+                      </Button>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}
@@ -227,8 +236,7 @@ export default function PlatformClinicsPage() {
       <Modal open={modalOpen} onClose={() => setModalOpen(false)} title="إنشاء عيادة جديدة">
         <ModalBody>
           <p className="mb-4 text-sm text-[#6b7c85]">
-            سيتم إنشاء حساب مدير للعيادة. شارك البريد وكلمة المرور مع المدير — هو يضيف الأطباء
-            والاستقبال من صفحة «الكادر».
+            سيتم إنشاء حساب مدير (ADMIN) للعيادة. يمكنك لاحقاً إضافة مستخدمين وصلاحيات من صفحة إدارة العيادة.
           </p>
           <div className="space-y-4">
             <div>
@@ -290,17 +298,7 @@ export default function PlatformClinicsPage() {
                 <p>
                   <span className="font-semibold">كلمة المرور:</span> {created.managerPassword}
                 </p>
-                <p>
-                  <span className="font-semibold">الترخيص:</span>{" "}
-                  {created.licenseActivated
-                    ? `مفعّل (${created.clinic.licenseTier})`
-                    : "غير مفعّل — يفعّله المدير من الإعدادات"}
-                </p>
               </div>
-              <p className="text-xs text-[#6b7c85]">
-                المدير يسجّل الدخول من صفحة تسجيل الدخول → يختار دور «مالك» → يضيف الكادر من
-                الإعدادات.
-              </p>
             </div>
           )}
         </ModalBody>
@@ -309,7 +307,11 @@ export default function PlatformClinicsPage() {
             {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
             {copied ? "تم النسخ" : "نسخ البيانات"}
           </Button>
-          <Button onClick={() => setSuccessOpen(false)}>تم</Button>
+          {created && (
+            <Link href={`/platform/clinics/${created.clinic.id}`}>
+              <Button onClick={() => setSuccessOpen(false)}>إدارة العيادة</Button>
+            </Link>
+          )}
         </ModalFooter>
       </Modal>
     </motion.div>
