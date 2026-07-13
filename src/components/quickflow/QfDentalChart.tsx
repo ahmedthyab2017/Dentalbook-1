@@ -1,38 +1,19 @@
 "use client";
 
-import { ToothSVG } from "@/components/patients/ToothSVG";
+import { ToothCell } from "@/components/patients/teeth/ToothCell";
 import { DentalChart, archStyle, type DentalChartRenderProps } from "@/components/patients/DentalChart";
-import { cn } from "@/lib/cn";
 import type { ToothState } from "@/types/db";
 import "./qf-dental-chart.css";
 
 const LEGEND = [
   { id: "healthy", ar: "سليم", en: "Healthy", dot: "leg-healthy" },
   { id: "decay", ar: "تسوس", en: "Caries", dot: "leg-decay" },
-  { id: "done", ar: "علاج منجز", en: "Completed", dot: "leg-done" },
-  { id: "active", ar: "علاج جاري", en: "In progress", dot: "leg-active" },
-  { id: "filling", ar: "محشو", en: "Filled", dot: "leg-filling" },
-  { id: "missing", ar: "خلع", en: "Extracted", dot: "leg-missing" },
-  { id: "na", ar: "غير متاح", en: "N/A", dot: "leg-na" },
+  { id: "filling", ar: "حشوة", en: "Filling", dot: "leg-filling" },
+  { id: "rct", ar: "علاج عصب", en: "Root Canal", dot: "leg-rct" },
+  { id: "crown", ar: "تلبيسة", en: "Crown", dot: "leg-crown" },
+  { id: "implant", ar: "زراعة", en: "Implant", dot: "leg-implant" },
+  { id: "missing", ar: "مفقود", en: "Missing", dot: "leg-missing" },
 ] as const;
-
-function mapChartState(state: ToothState | undefined, selected: boolean): string {
-  if (selected) return "qf-active";
-  switch (state) {
-    case "decay":
-      return "t-decay";
-    case "filling":
-      return "t-filling";
-    case "rct":
-      return "t-rct";
-    case "crown":
-      return "t-crown";
-    case "missing":
-      return "t-missing";
-    default:
-      return "t-healthy";
-  }
-}
 
 export function QfDentalChart({
   selected,
@@ -46,22 +27,19 @@ export function QfDentalChart({
   lang?: "ar" | "en";
 }) {
   function renderTooth({ num, jaw, state, selected: isSel, archIdx, archSide, archCount }: DentalChartRenderProps) {
-    const stateClass = mapChartState(state, isSel);
-
     return (
-      <button
+      <ToothCell
         key={num}
-        type="button"
-        className={cn("qf-tooth-cell", stateClass, isSel && "selected")}
-        style={archStyle(archIdx, archCount, archSide, jaw)}
+        num={num}
+        jaw={jaw}
+        state={state}
+        selected={isSel}
+        archStyle={archStyle(archIdx, archCount, archSide, jaw)}
         onClick={() => onToggle(num)}
-        aria-pressed={isSel}
-        aria-label={`${lang === "ar" ? "السن" : "Tooth"} ${num}`}
-      >
-        {jaw === "upper" && <span className="qf-tooth-num qf-tooth-num-top">{num}</span>}
-        <ToothSVG num={num} jaw={jaw} />
-        {jaw === "lower" && <span className="qf-tooth-num qf-tooth-num-bottom">{num}</span>}
-      </button>
+        wrapClassName="qf-tooth-wrap"
+        cellClassName="qf-tooth-cell"
+        label={`${lang === "ar" ? "السن" : "Tooth"} ${num}`}
+      />
     );
   }
 

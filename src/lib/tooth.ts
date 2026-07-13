@@ -1,7 +1,17 @@
 import type { ToothState } from "@/types/db";
 
-// Ported from _toothStates()/_toothStateLabel() (app/app.js:3663-3666).
-export const TOOTH_STATES: ToothState[] = ["healthy", "decay", "filling", "rct", "crown", "missing"];
+// Ported from _toothStates()/_toothStateLabel() (app/app.js:3663-3666), extended
+// with implant + planned-extraction states for the premium chart redesign.
+export const TOOTH_STATES: ToothState[] = [
+  "healthy",
+  "decay",
+  "filling",
+  "rct",
+  "crown",
+  "implant",
+  "missing",
+  "extraction",
+];
 
 export const TOOTH_STATE_LABEL_AR: Record<ToothState, string> = {
   healthy: "سليم",
@@ -9,11 +19,58 @@ export const TOOTH_STATE_LABEL_AR: Record<ToothState, string> = {
   filling: "حشوة",
   rct: "علاج عصب",
   crown: "تلبيسة",
+  implant: "زراعة",
   missing: "مفقود",
+  extraction: "خلع مخطط",
+};
+
+export const TOOTH_STATE_LABEL_EN: Record<ToothState, string> = {
+  healthy: "Healthy",
+  decay: "Caries",
+  filling: "Filling",
+  rct: "Root Canal",
+  crown: "Crown",
+  implant: "Implant",
+  missing: "Missing",
+  extraction: "Extraction Planned",
+};
+
+/** Hex swatch shown in legends/status pickers for each tooth state. */
+export const TOOTH_STATE_COLOR: Record<ToothState, string> = {
+  healthy: "#ffffff",
+  decay: "#ef4444",
+  filling: "#3b82f6",
+  rct: "#f97316",
+  crown: "#d4af37",
+  implant: "#a855f7",
+  missing: "#94a3b8",
+  extraction: "#7f1d1d",
 };
 
 export type Dentition = "permanent" | "deciduous";
 export type ToothType = "central" | "lateral" | "canine" | "premolar" | "molar";
+
+/**
+ * Fine-grained anatomical category — drives which SVG morphology (crown
+ * shape, cusp count, root count) is rendered for a given tooth number.
+ */
+export type ToothCategory =
+  | "central"
+  | "lateral"
+  | "canine"
+  | "premolar1"
+  | "premolar2"
+  | "molar1"
+  | "molar2"
+  | "molar3"
+  | "dcCentral"
+  | "dcLateral"
+  | "dcCanine"
+  | "dcMolar1"
+  | "dcMolar2";
+
+export type Jaw = "upper" | "lower";
+export type Side = "right" | "left";
 
 /** Permanent — each quadrant: 1 central, 1 lateral, 1 canine, 2 premolar, 3 molar (8 teeth). */
 export const PERM_UPPER_RIGHT = [18, 17, 16, 15, 14, 13, 12, 11];
@@ -54,6 +111,22 @@ export function isDeciduousTooth(num: number): boolean {
   return quadrant >= 5 && quadrant <= 8;
 }
 
+/** Quadrant 1-8 (FDI). */
+export function getQuadrant(num: number): number {
+  return Math.floor(num / 10);
+}
+
+export function getToothJaw(num: number): Jaw {
+  const q = getQuadrant(num);
+  return q === 1 || q === 2 || q === 5 || q === 6 ? "upper" : "lower";
+}
+
+/** Patient's anatomical right/left (quadrants 1/4/5/8 = right, 2/3/6/7 = left). */
+export function getToothSide(num: number): Side {
+  const q = getQuadrant(num);
+  return q === 1 || q === 4 || q === 5 || q === 8 ? "right" : "left";
+}
+
 export function getToothType(num: number): ToothType {
   const pos = num % 10;
   if (pos === 1) return "central";
@@ -61,6 +134,109 @@ export function getToothType(num: number): ToothType {
   if (pos === 3) return "canine";
   if (pos === 4 || pos === 5) return isDeciduousTooth(num) ? "molar" : "premolar";
   return "molar";
+}
+
+/** Fine-grained morphology category used by the anatomical SVG renderer. */
+export function getToothCategory(num: number): ToothCategory {
+  const pos = num % 10;
+  const deciduous = isDeciduousTooth(num);
+  if (deciduous) {
+    if (pos === 1) return "dcCentral";
+    if (pos === 2) return "dcLateral";
+    if (pos === 3) return "dcCanine";
+    if (pos === 4) return "dcMolar1";
+    return "dcMolar2";
+  }
+  if (pos === 1) return "central";
+  if (pos === 2) return "lateral";
+  if (pos === 3) return "canine";
+  if (pos === 4) return "premolar1";
+  if (pos === 5) return "premolar2";
+  if (pos === 6) return "molar1";
+  if (pos === 7) return "molar2";
+  return "molar3";
+}
+
+/** Anatomically-typical root count for a tooth (upper molars: 3, lower molars: 2, etc). */
+export function getRootCount(num: number): number {
+  const category = getToothCategory(num);
+  const jaw = getToothJaw(num);
+  switch (category) {
+    case "central":
+    case "lateral":
+    case "canine":
+    case "dcCentral":
+    case "dcLateral":
+    case "dcCanine":
+      return 1;
+    case "premolar1":
+      return jaw === "upper" ? 2 : 1;
+    case "premolar2":
+      return 1;
+    case "molar1":
+    case "molar2":
+      return jaw === "upper" ? 3 : 2;
+    case "molar3":
+      // Third molars are highly variable — often fused into fewer roots.
+      return jaw === "upper" ? 2 : 2;
+    case "dcMolar1":
+    case "dcMolar2":
+      return jaw === "upper" ? 3 : 2;
+    default:
+      return 1;
+  }
+}
+
+const TOOTH_NAME_AR: Record<ToothCategory, string> = {
+  central: "قاطعة مركزية",
+  lateral: "قاطعة جانبية",
+  canine: "ناب",
+  premolar1: "ضاحك أول",
+  premolar2: "ضاحك ثاني",
+  molar1: "رحى أولى",
+  molar2: "رحى ثانية",
+  molar3: "رحى ثالثة (العقل)",
+  dcCentral: "قاطعة مركزية لبنية",
+  dcLateral: "قاطعة جانبية لبنية",
+  dcCanine: "ناب لبني",
+  dcMolar1: "رحى لبنية أولى",
+  dcMolar2: "رحى لبنية ثانية",
+};
+
+const TOOTH_NAME_EN: Record<ToothCategory, string> = {
+  central: "Central Incisor",
+  lateral: "Lateral Incisor",
+  canine: "Canine",
+  premolar1: "First Premolar",
+  premolar2: "Second Premolar",
+  molar1: "First Molar",
+  molar2: "Second Molar",
+  molar3: "Third Molar (Wisdom)",
+  dcCentral: "Primary Central Incisor",
+  dcLateral: "Primary Lateral Incisor",
+  dcCanine: "Primary Canine",
+  dcMolar1: "Primary First Molar",
+  dcMolar2: "Primary Second Molar",
+};
+
+const JAW_LABEL: Record<Jaw, { ar: string; en: string }> = {
+  upper: { ar: "علوي", en: "Upper" },
+  lower: { ar: "سفلي", en: "Lower" },
+};
+
+const SIDE_LABEL: Record<Side, { ar: string; en: string }> = {
+  right: { ar: "أيمن", en: "Right" },
+  left: { ar: "أيسر", en: "Left" },
+};
+
+export function getToothFullName(num: number, lang: "ar" | "en" = "ar"): string {
+  const category = getToothCategory(num);
+  const jaw = getToothJaw(num);
+  const side = getToothSide(num);
+  if (lang === "ar") {
+    return `${TOOTH_NAME_AR[category]} ${JAW_LABEL[jaw].ar} ${SIDE_LABEL[side].ar}`;
+  }
+  return `${JAW_LABEL[jaw].en} ${SIDE_LABEL[side].en} ${TOOTH_NAME_EN[category]}`;
 }
 
 export function getArchTeeth(dentition: Dentition) {

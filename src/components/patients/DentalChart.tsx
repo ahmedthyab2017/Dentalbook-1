@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, type CSSProperties, type ReactNode } from "react";
-import { ToothSVG } from "./ToothSVG";
+import { ToothCell } from "./teeth/ToothCell";
+import { ToothDefs } from "./teeth/ToothDefs";
 import {
   DENTITION_LABELS,
   TOOTH_TYPE_LABELS,
@@ -35,6 +36,13 @@ type DentalChartProps = {
   className?: string;
 };
 
+/**
+ * Places a tooth along a natural elliptical dental-arch curve: teeth near
+ * the midline (incisors) sit almost flat, while posterior teeth (molars)
+ * rise and tilt outward — like a real jaw arch rather than a straight row.
+ * Horizontal spacing is left to the flex layout; this only supplies the
+ * curvature (vertical rise + rotation).
+ */
 export function archStyle(
   idx: number,
   count: number,
@@ -44,11 +52,18 @@ export function archStyle(
   const fromMid = side === "right" ? count - 1 - idx : idx;
   const sign = side === "right" ? 1 : -1;
   const jawSign = jaw === "upper" ? 1 : -1;
-  const tilt = sign * fromMid * 2.8;
-  const lift = fromMid * 1.4 * jawSign;
+  const t = count > 1 ? fromMid / (count - 1) : 0;
+  const maxAngle = 34; // degrees of arc sweep from midline to the last molar
+  const angleDeg = t * maxAngle;
+  const angleRad = (angleDeg * Math.PI) / 180;
+  const archRadius = 52; // px — controls how dramatically the arch rises
+  const tilt = sign * angleDeg * 0.62;
+  const lift = archRadius * (1 - Math.cos(angleRad)) * jawSign;
+  const outward = Math.sin(angleRad) * 3 * jawSign;
   return {
     "--arch-tilt": `${tilt}deg`,
     "--arch-lift": `${lift}px`,
+    "--arch-out": `${outward}px`,
   } as CSSProperties;
 }
 
@@ -63,25 +78,15 @@ function defaultRenderTooth({
   archCount,
 }: DentalChartRenderProps & { onToothClick?: (n: number) => void }) {
   return (
-    <div
+    <ToothCell
       key={num}
-      className={`dc-tooth-cell t-${state}${selected ? " selected" : ""}`}
-      style={archStyle(archIdx, archCount, archSide, jaw)}
-      role="button"
-      tabIndex={0}
-      title={`${num}`}
+      num={num}
+      jaw={jaw}
+      state={state}
+      selected={selected}
+      archStyle={archStyle(archIdx, archCount, archSide, jaw)}
       onClick={() => onToothClick?.(num)}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          onToothClick?.(num);
-        }
-      }}
-    >
-      {jaw === "upper" && <span className="dc-tooth-num dc-tooth-num-top">{num}</span>}
-      <ToothSVG num={num} jaw={jaw} />
-      {jaw === "lower" && <span className="dc-tooth-num dc-tooth-num-bottom">{num}</span>}
-    </div>
+    />
   );
 }
 
@@ -128,6 +133,7 @@ export function DentalChart({
 
   return (
     <div className={`dental-chart-wrap ${className}`.trim()}>
+      <ToothDefs />
       {showDentitionToggle && (
         <div className="dc-dentition-bar">
           {(["permanent", "deciduous"] as Dentition[]).map((d) => (

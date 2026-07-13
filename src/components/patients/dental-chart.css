@@ -1,4 +1,4 @@
-/* Anatomical dental chart — dark clinical theme (matches reference photo) */
+/* Premium anatomical dental chart — dark clinical theme */
 .dental-chart-wrap {
   direction: ltr;
 }
@@ -37,10 +37,10 @@
 /* ── Chart panel ── */
 .dental-chart-wrap > .dental-chart {
   position: relative;
-  background: radial-gradient(ellipse 120% 80% at 50% 50%, #0f1f35 0%, #0a1220 55%, #060d18 100%);
+  background: radial-gradient(ellipse 120% 80% at 50% 50%, #102138 0%, #0a1220 55%, #060d18 100%);
   border: 1px solid rgba(59, 130, 246, 0.18);
   border-radius: 20px;
-  padding: 22px 14px 18px;
+  padding: 30px 14px 24px;
   overflow-x: auto;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.04),
@@ -49,27 +49,31 @@
 
 .dc-chart-inner {
   position: relative;
-  min-width: 640px;
-  padding: 4px 0;
+  min-width: 700px;
+  padding: 8px 0;
 }
 
 /* ── Arch rows ── */
 .chart-arch {
   position: relative;
   z-index: 1;
-  padding: 4px 0;
+  padding: 6px 0;
 }
 
 .chart-row {
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  align-items: flex-end;
   gap: 0;
   direction: ltr;
 }
 
+.chart-arch.lower .chart-row {
+  align-items: flex-start;
+}
+
 .arch-mid {
-  width: 12px;
+  width: 14px;
   flex-shrink: 0;
 }
 
@@ -81,7 +85,7 @@
   flex-direction: column;
   align-items: center;
   gap: 4px;
-  margin: 4px 0 8px;
+  margin: 6px 0 10px;
 }
 
 .dc-jaw-line {
@@ -133,65 +137,79 @@
   margin: -2px 0;
 }
 
-/* ── Tooth cells ── */
-.dc-tooth-cell {
+/* ── Tooth arch wrapper: carries the static curvature transform ── */
+.tooth-cell-arch {
+  --arch-tilt: 0deg;
+  --arch-lift: 0px;
+  --arch-out: 0px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px;
-  cursor: pointer;
-  user-select: none;
-  padding: 2px 0;
-  border-radius: 8px;
-  border: 2px solid transparent;
-  transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+  gap: 3px;
+  padding: 2px 3px;
+  transform: rotate(var(--arch-tilt)) translateY(var(--arch-lift));
+  transition: transform 0.25s ease;
 }
 
-.dc-tooth-cell:hover {
-  background: rgba(59, 130, 246, 0.1);
+.chart-arch.lower .tooth-cell-arch {
+  transform: rotate(var(--arch-tilt)) translateY(calc(var(--arch-lift) * -1));
 }
 
-.dc-tooth-cell.selected {
-  background: rgba(59, 130, 246, 0.16);
-  border-color: rgba(96, 165, 250, 0.6);
-}
-
-.dc-tooth-num {
+.tooth-num {
   font: 700 10px/1 var(--en-font, "Segoe UI", system-ui, sans-serif);
   color: rgba(148, 163, 184, 0.75);
   letter-spacing: 0.02em;
 }
 
-.dc-tooth-num-top {
+.tooth-num-top {
   margin-bottom: 1px;
 }
 
-.dc-tooth-num-bottom {
+.tooth-num-bottom {
   margin-top: 1px;
 }
 
-.dc-tooth-cell.selected .dc-tooth-num {
+.tooth-cell.selected + .tooth-num,
+.tooth-cell-arch:has(.tooth-cell.selected) .tooth-num {
   color: #60a5fa;
   font-weight: 800;
 }
 
-/* arch curve — driven by inline --arch-tilt / --arch-lift */
-.dc-tooth-cell,
-.qf-dc-shared .qf-tooth-cell {
-  --arch-tilt: 0deg;
-  --arch-lift: 0px;
-  transform: rotate(var(--arch-tilt)) translateY(var(--arch-lift));
+/* ── Interactive tooth cell (motion.button) ── */
+.tooth-cell {
+  appearance: none;
+  background: transparent;
+  border: none;
+  padding: 4px;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 12px;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+  transition: box-shadow 0.2s ease, background 0.2s ease;
 }
 
-.dc-tooth-cell:hover,
-.qf-dc-shared .qf-tooth-cell:hover {
-  transform: rotate(var(--arch-tilt)) translateY(calc(var(--arch-lift) - 2px));
+.tooth-cell:hover {
+  background: rgba(59, 130, 246, 0.12);
+  box-shadow:
+    0 0 0 3px rgba(96, 165, 250, 0.28),
+    0 8px 18px -6px rgba(59, 130, 246, 0.55);
 }
 
-.dc-tooth-cell.selected,
-.qf-dc-shared .qf-tooth-cell.selected,
-.qf-dc-shared .qf-tooth-cell.qf-active {
-  transform: rotate(var(--arch-tilt)) translateY(calc(var(--arch-lift) - 3px));
+.tooth-cell:focus-visible {
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.5);
+}
+
+.tooth-cell.selected {
+  background: rgba(59, 130, 246, 0.18);
+  box-shadow:
+    0 0 0 2.5px #60a5fa,
+    0 0 22px 4px rgba(96, 165, 250, 0.55),
+    0 10px 20px -6px rgba(37, 99, 235, 0.6);
 }
 
 /* ── Tooth SVG graphics ── */
@@ -202,119 +220,22 @@
 }
 
 .tooth-svg {
-  width: 36px;
+  width: 40px;
   height: auto;
-  transition: filter 0.15s ease;
   display: block;
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.35));
 }
 
 .dental-chart-deciduous .tooth-svg {
-  width: 28px;
+  width: 30px;
 }
 
-.tooth-svg .root,
-.tooth-svg .root-2 {
-  fill: url(#tc-root);
-  stroke: #b8935e;
-  stroke-width: 0.6;
+.tooth-cell:hover .tooth-svg {
+  filter: drop-shadow(0 6px 14px rgba(59, 130, 246, 0.5));
 }
 
-.tooth-svg .root-shade {
-  fill: url(#tc-root-shade);
-  stroke: none;
-  pointer-events: none;
-}
-
-.tooth-svg .crown {
-  fill: url(#tc-crown);
-  stroke: #aebfc8;
-  stroke-width: 0.8;
-}
-
-.tooth-svg .crown-hi {
-  fill: url(#tc-crown-hi);
-  stroke: none;
-  pointer-events: none;
-}
-
-.tooth-svg .occlusal {
-  fill: url(#tc-occlusal);
-  stroke: none;
-  pointer-events: none;
-}
-
-.tooth-svg .groove,
-.tooth-svg .incisal {
-  stroke: rgba(120, 140, 150, 0.4);
-  stroke-width: 0.7;
-  fill: none;
-}
-
-.tooth-svg .state-overlay {
-  fill: transparent;
-  stroke: none;
-  pointer-events: none;
-  transition: fill 0.2s ease;
-}
-
-.tooth-svg .caries {
-  fill: transparent;
-  pointer-events: none;
-}
-
-.tooth-svg .xmark {
-  stroke: transparent;
-  stroke-width: 2.4;
-  stroke-linecap: round;
-  fill: none;
-}
-
-.dc-tooth-cell:hover .tooth-svg {
-  filter: drop-shadow(0 4px 10px rgba(59, 130, 246, 0.4));
-}
-
-.dc-tooth-cell.selected .tooth-svg {
-  filter: drop-shadow(0 6px 14px rgba(96, 165, 250, 0.5));
-}
-
-/* ── State colours (overlay caps, like reference photo) ── */
-.dc-tooth-cell.t-healthy .state-overlay {
-  fill: transparent;
-}
-
-.dc-tooth-cell.t-decay .caries {
-  fill: #ef4444;
-}
-
-.dc-tooth-cell.t-filling .state-overlay {
-  fill: rgba(59, 130, 246, 0.6);
-}
-
-.dc-tooth-cell.t-rct .state-overlay {
-  fill: rgba(167, 139, 250, 0.55);
-}
-
-.dc-tooth-cell.t-crown .state-overlay {
-  fill: rgba(74, 222, 128, 0.6);
-}
-
-.dc-tooth-cell.t-missing {
-  opacity: 0.4;
-}
-
-.dc-tooth-cell.t-missing .crown {
-  fill: #1e293b;
-  stroke: #334155;
-}
-
-.dc-tooth-cell.t-missing .root,
-.dc-tooth-cell.t-missing .root-2 {
-  fill: #0f172a;
-  stroke: #1e293b;
-}
-
-.dc-tooth-cell.t-missing .xmark {
-  stroke: #ef4444;
+.tooth-cell.selected .tooth-svg {
+  filter: drop-shadow(0 8px 16px rgba(96, 165, 250, 0.6));
 }
 
 /* deciduous sizing */
@@ -322,7 +243,7 @@
   gap: 1px;
 }
 
-.dental-chart-deciduous .dc-tooth-num {
+.dental-chart-deciduous .tooth-num {
   font-size: 9px;
 }
 
@@ -388,12 +309,12 @@
 
 @media (max-width: 680px) {
   .tooth-svg {
-    width: 26px;
+    width: 30px;
   }
   .dental-chart-deciduous .tooth-svg {
-    width: 21px;
+    width: 23px;
   }
   .dc-chart-inner {
-    min-width: 540px;
+    min-width: 600px;
   }
 }

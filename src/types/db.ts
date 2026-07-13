@@ -79,7 +79,22 @@ export type ToothState =
   | "filling"
   | "rct"
   | "crown"
-  | "missing";
+  | "implant"
+  | "missing"
+  | "extraction";
+
+export interface ToothHistoryEntry {
+  at: number;
+  text: string;
+}
+
+export interface ToothNote {
+  diagnosis?: string;
+  treatments?: string;
+  notes?: string;
+  images?: string[];
+  history?: ToothHistoryEntry[];
+}
 
 export interface ConsentRecord {
   type: string;
@@ -110,6 +125,7 @@ export interface Patient {
   medical?: string;
   notes?: string;
   chart?: Record<string, ToothState>;
+  toothNotes?: Record<string, ToothNote>;
   consents?: ConsentRecord[];
   createdAt: number;
 }
