@@ -2,8 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDbStore } from "@/stores/useDbStore";
 import { validateEmailLogin } from "@/lib/auth";
 import { fadeScaleIn } from "@/lib/motion";
@@ -15,10 +14,11 @@ import type { CloudSyncConfig } from "@/types/db";
 
 const TEAL = "#366F7F";
 
+const PLATFORM_DENIED_MSG =
+  "لوحة المنصة لمدير النظام فقط. استخدم superadmin@dantal.clinic وليس بريد مدير العيادة.";
+
 export default function LoginPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const platformDenied = searchParams.get("reason") === "platform";
   const clinicName = useDbStore((s) => s.db.meta.clinicName);
   const updateMeta = useDbStore((s) => s.updateMeta);
   const replaceDb = useDbStore((s) => s.replaceDb);
@@ -27,14 +27,17 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPass, setShowPass] = useState(false);
-  const [error, setError] = useState(
-    platformDenied
-      ? "لوحة المنصة لمدير النظام فقط. استخدم superadmin@dantal.clinic وليس بريد مدير العيادة."
-      : ""
-  );
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [registerMode, setRegisterMode] = useState(false);
   const [clinicNameInput, setClinicNameInput] = useState(clinicName);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("reason") === "platform") {
+      setError(PLATFORM_DENIED_MSG);
+    }
+  }, []);
 
   async function finishBackendAuth(cloud: CloudSyncConfig) {
     let merged;
