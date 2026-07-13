@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { DantalPage } from "@/components/layout/DantalPage";
 import { DantalSettingsSection } from "@/components/settings/DantalSettingsSection";
 import { CloudSyncSection } from "@/components/settings/CloudSyncSection";
+import { ClinicTeamSection } from "@/components/settings/ClinicTeamSection";
 import { Button, Input, Select } from "@/components/ds";
 import { useDbStore } from "@/stores/useDbStore";
 import { useSessionStore } from "@/stores/useSessionStore";
@@ -113,8 +114,14 @@ export default function SettingsPage() {
       </DantalSettingsSection>
 
       {isOwner && (
+        <DantalSettingsSection title="حسابات الموظفين">
+          <ClinicTeamSection />
+        </DantalSettingsSection>
+      )}
+
+      {isOwner && (
         <>
-          <DantalSettingsSection title="الأمان — رموز PIN">
+          <DantalSettingsSection title="الأمان — رموز PIN (اختياري)">
             <div className="grid gap-4 sm:grid-cols-3">
               <Input id="st-pin-owner" label="رمز المالك" type="password" defaultValue={m.pins?.owner || m.ownerPin} />
               <Input id="st-pin-reception" label="رمز الاستقبال" type="password" defaultValue={m.pins?.reception || m.receptionPin} />

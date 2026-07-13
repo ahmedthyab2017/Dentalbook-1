@@ -51,6 +51,53 @@ export function mergeExportedDb(
   };
 }
 
+type WithId = { id: string; createdAt?: number };
+
+function mergeById<T extends WithId>(local: T[], remote: T[]): T[] {
+  const map = new Map<string, T>();
+  for (const item of remote) map.set(item.id, item);
+  for (const item of local) {
+    const existing = map.get(item.id);
+    if (!existing) {
+      map.set(item.id, item);
+      continue;
+    }
+    const keepLocal = (item.createdAt || 0) >= (existing.createdAt || 0);
+    map.set(item.id, keepLocal ? item : existing);
+  }
+  return Array.from(map.values());
+}
+
+/** دمج البيانات المحلية مع السحابية — لا نمسح المرضى المحليين إذا السيرفر فاضي */
+export function mergeRemoteDb(local: DentistDb, remote: DentistDb): DentistDb {
+  return {
+    meta: {
+      ...remote.meta,
+      ...local.meta,
+      cloud: { ...remote.meta.cloud, ...local.meta.cloud },
+      license: local.meta.license?.key ? local.meta.license : remote.meta.license,
+      demoSeeded: local.meta.demoSeeded || remote.meta.demoSeeded,
+    },
+    patients: mergeById(local.patients, remote.patients),
+    appointments: mergeById(local.appointments, remote.appointments),
+    staff: remote.staff.length ? remote.staff : local.staff,
+    plans: mergeById(local.plans, remote.plans),
+    prescriptions: mergeById(local.prescriptions, remote.prescriptions),
+    payments: mergeById(local.payments, remote.payments),
+    expenses: mergeById(local.expenses, remote.expenses),
+    vendors: mergeById(local.vendors, remote.vendors),
+    inventory: mergeById(local.inventory, remote.inventory),
+    services: mergeById(local.services, remote.services),
+    cases: mergeById(local.cases, remote.cases),
+    reminders: mergeById(local.reminders, remote.reminders),
+    voiceNotes: mergeById(local.voiceNotes, remote.voiceNotes),
+    auditLog: mergeById(local.auditLog, remote.auditLog),
+    settlements: mergeById(local.settlements, remote.settlements),
+    archives: mergeById(local.archives, remote.archives),
+    referrals: mergeById(local.referrals ?? [], remote.referrals ?? []),
+  };
+}
+
 export async function pullFromBackend(preserveCloud?: CloudSyncConfig): Promise<DentistDb | null> {
   if (!isBackendAuthed()) return null;
   const exported = await ClinicApi.exportAll();
@@ -67,7 +114,8 @@ const API_ERROR_AR: Record<string, string> = {
   EMAIL_TAKEN: "هذا البريد مستخدم مسبقاً — جرّب بريداً آخر",
   LICENSE_INVALID: "مفتاح الترخيص غير صالح — اتركه فارغاً أو استخدم DANTAL-DEV-CLINIC",
   LICENSE_UNAVAILABLE: "مفتاح الترخيص منتهٍ أو مستنفد",
-  FORBIDDEN: "هذا القسم لمدير المنصة فقط — سجّل دخولك بحساب مدير النظام",
+  INTERNAL_ERROR: "خطأ في السيرفر — جرّب لاحقاً أو تواصل مع الدعم",
+  FORBIDDEN: "ليس لديك صلاحية لهذا القسم",
 };
 
 export function isPlatformForbidden(err: unknown): boolean {

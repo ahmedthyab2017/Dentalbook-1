@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Pencil, Plus, Trash2, Users } from "lucide-react";
 import { DantalPage } from "@/components/layout/DantalPage";
 import { OwnerOnly } from "@/components/OwnerOnly";
+import { ClinicTeamSection } from "@/components/settings/ClinicTeamSection";
 import {
   Badge,
   Button,
@@ -23,6 +24,7 @@ import {
   TableRow,
 } from "@/components/ds";
 import { useDbStore } from "@/stores/useDbStore";
+import { isBackendAuthed } from "@/lib/backend";
 import type { StaffMember, StaffRole } from "@/types/db";
 import { slideUp } from "@/lib/motion";
 
@@ -43,9 +45,21 @@ export default function StaffPage() {
   return (
     <DantalPage title="الكادر">
       <OwnerOnly>
-        <StaffContent />
+        <StaffPageContent />
       </OwnerOnly>
     </DantalPage>
+  );
+}
+
+function StaffPageContent() {
+  return (
+    <>
+      <motion.div className="mb-8" {...slideUp}>
+        <h1 className="dantal-title">الكادر</h1>
+        <p className="dantal-subtitle mt-2">إدارة الموظفين وحسابات الدخول</p>
+      </motion.div>
+      <StaffContent />
+    </>
   );
 }
 
@@ -109,10 +123,30 @@ function StaffContent() {
 
   return (
     <>
+      {isBackendAuthed() ? (
+        <motion.div className="mb-10 rounded-[20px] border border-[#d1dde3] bg-white p-5 sm:p-6" {...slideUp}>
+          <h2 className="text-lg font-bold text-[#366F7F]">حسابات دخول الموظفين</h2>
+          <p className="mt-2 text-sm text-muted">
+            أنشئ بريداً وكلمة مرور لكل موظف — يدخل من صفحة تسجيل الدخول مباشرة (بدون PIN).
+          </p>
+          <div className="mt-4">
+            <ClinicTeamSection />
+          </div>
+        </motion.div>
+      ) : (
+        <motion.div
+          className="mb-10 rounded-[20px] border border-amber-200 bg-amber-50 px-5 py-4 text-sm text-amber-900"
+          {...slideUp}
+        >
+          لإنشاء حسابات دخول للموظفين (بريد + كلمة مرور)، سجّل دخولك أولاً من صفحة الدخول بحساب مدير العيادة
+          — ليس عبر PIN المحلي.
+        </motion.div>
+      )}
+
       <motion.div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between" {...slideUp}>
         <div>
-          <h1 className="dantal-title">الكادر</h1>
-          <p className="dantal-subtitle mt-2">إدارة الأطباء والموظفين</p>
+          <h2 className="text-lg font-bold text-foreground">الكادر الطبي (أسماء وعمولات)</h2>
+          <p className="dantal-subtitle mt-2">قائمة الأطباء والموظفين داخل العيادة — للعرض والعمولات</p>
         </div>
         <Button onClick={openAdd}>
           <Plus className="h-4 w-4" />

@@ -9,7 +9,14 @@ import { fadeScaleIn } from "@/lib/motion";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { Cloud } from "@/lib/cloud";
-import { apiErrorMessage, isBackendEnabled, mergeExportedDb, pullFromBackend, pushToBackend } from "@/lib/backend";
+import {
+  apiErrorMessage,
+  isBackendEnabled,
+  mergeExportedDb,
+  mergeRemoteDb,
+  pullFromBackend,
+  pushToBackend,
+} from "@/lib/backend";
 import { APP_BRAND } from "@/lib/constants";
 import { useSessionStore } from "@/stores/useSessionStore";
 import type { CloudSyncConfig } from "@/types/db";
@@ -22,7 +29,6 @@ export default function LoginPage() {
   const router = useRouter();
   const updateMeta = useDbStore((s) => s.updateMeta);
   const replaceDb = useDbStore((s) => s.replaceDb);
-  const ensureSeeded = useDbStore((s) => s.ensureSeeded);
   const backendMode = isBackendEnabled();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -41,19 +47,18 @@ export default function LoginPage() {
     cloud: CloudSyncConfig,
     profile: { id: string; email: string; firstName?: string | null; lastName?: string | null; roles: string[] }
   ) {
-    let merged;
+    const local = useDbStore.getState().db;
+    let remote;
     try {
       const exported = await pullFromBackend(cloud);
-      merged = exported || mergeExportedDb({}, cloud);
+      remote = exported || mergeExportedDb({}, cloud);
     } catch {
-      merged = mergeExportedDb({}, cloud);
+      remote = mergeExportedDb({}, cloud);
     }
+    const merged = mergeRemoteDb(local, remote);
     replaceDb(merged);
-    if (!merged.patients.length && !merged.meta.demoSeeded) {
-      ensureSeeded();
-    }
     try {
-      await pushToBackend(useDbStore.getState().db);
+      await pushToBackend(merged);
     } catch {
       /* first-time sync may fail; login should still succeed */
     }
