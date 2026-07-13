@@ -1,10 +1,13 @@
 "use client";
 
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { rolesAllowedByTier } from "@/lib/auth";
+import { rolesAllowedByTier, backendProfileToSession } from "@/lib/auth";
 import { useDbStore } from "@/stores/useDbStore";
 import { useSessionStore } from "@/stores/useSessionStore";
+import { Cloud } from "@/lib/cloud";
+import { isBackendAuthed } from "@/lib/backend";
 import { Button, Card } from "@/components/ds";
 import { fadeScaleIn, slideUp } from "@/lib/motion";
 import type { Role } from "@/types/session";
@@ -21,7 +24,23 @@ export default function RolePickerPage() {
   const router = useRouter();
   const db = useDbStore((s) => s.db);
   const setSelectedRole = useSessionStore((s) => s.setSelectedRole);
+  const setUser = useSessionStore((s) => s.setUser);
   const allowed = rolesAllowedByTier(db);
+
+  useEffect(() => {
+    if (!isBackendAuthed()) return;
+    void Cloud.me()
+      .then((profile) => {
+        const sessionUser = backendProfileToSession(profile, useDbStore.getState().db);
+        if (sessionUser) {
+          setUser(sessionUser);
+          router.replace("/dashboard");
+        }
+      })
+      .catch(() => {
+        /* keep manual role/PIN flow for local-only */
+      });
+  }, [router, setUser]);
 
   function pick(role: Role) {
     setSelectedRole(role);

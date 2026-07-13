@@ -22,7 +22,7 @@ export default function PinPage() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (!selectedRole) router.replace("/login");
+    if (!selectedRole) router.replace("/role");
   }, [selectedRole, router]);
 
   if (!selectedRole) return null;

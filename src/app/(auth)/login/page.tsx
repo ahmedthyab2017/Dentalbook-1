@@ -4,13 +4,14 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDbStore } from "@/stores/useDbStore";
-import { validateEmailLogin } from "@/lib/auth";
+import { validateEmailLogin, backendProfileToSession } from "@/lib/auth";
 import { fadeScaleIn } from "@/lib/motion";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { Cloud } from "@/lib/cloud";
 import { apiErrorMessage, isBackendEnabled, mergeExportedDb, pullFromBackend, pushToBackend } from "@/lib/backend";
 import { APP_BRAND } from "@/lib/constants";
+import { useSessionStore } from "@/stores/useSessionStore";
 import type { CloudSyncConfig } from "@/types/db";
 
 const TEAL = "#366F7F";
@@ -36,7 +37,10 @@ export default function LoginPage() {
     }
   }, []);
 
-  async function finishBackendAuth(cloud: CloudSyncConfig) {
+  async function finishBackendAuth(
+    cloud: CloudSyncConfig,
+    profile: { id: string; email: string; firstName?: string | null; lastName?: string | null; roles: string[] }
+  ) {
     let merged;
     try {
       const exported = await pullFromBackend(cloud);
@@ -53,6 +57,14 @@ export default function LoginPage() {
     } catch {
       /* first-time sync may fail; login should still succeed */
     }
+
+    const sessionUser = backendProfileToSession(profile, useDbStore.getState().db);
+    if (sessionUser) {
+      useSessionStore.getState().setUser(sessionUser);
+      router.push("/dashboard");
+      return;
+    }
+
     router.push("/role");
   }
 
@@ -80,7 +92,7 @@ export default function LoginPage() {
           router.push("/platform/clinics");
           return;
         }
-        await finishBackendAuth(cloud);
+        await finishBackendAuth(cloud, profile);
         return;
       }
 

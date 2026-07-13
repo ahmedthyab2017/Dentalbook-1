@@ -32,6 +32,55 @@ export interface LoginResult {
   newPatient?: DentistDb["patients"][number];
 }
 
+export type BackendProfile = {
+  id: string;
+  email: string;
+  firstName?: string | null;
+  lastName?: string | null;
+  roles: string[];
+};
+
+/** Map API roles to in-app session after email/password login (skips PIN step). */
+export function backendProfileToSession(profile: BackendProfile, db: DentistDb): SessionUser | null {
+  const apiRoles = profile.roles || [];
+  if (apiRoles.includes("SUPER_ADMIN")) return null;
+
+  const displayName =
+    [profile.firstName, profile.lastName].filter(Boolean).join(" ").trim() || profile.email;
+
+  if (apiRoles.includes("ADMIN") || apiRoles.includes("ACCOUNTANT")) {
+    return {
+      id: profile.id,
+      name: db.meta.doctorName || displayName || "المدير",
+      role: "owner",
+    };
+  }
+
+  if (apiRoles.includes("DOCTOR") || apiRoles.includes("DENTIST")) {
+    const staff = db.staff.find(
+      (s) =>
+        (s.role === "doctor" || s.role === "owner") &&
+        (s.name || "").trim().toLowerCase() === displayName.toLowerCase()
+    );
+    return {
+      id: staff?.id || profile.id,
+      name: staff?.name || displayName,
+      role: "doctor",
+      staffId: staff?.id,
+    };
+  }
+
+  if (apiRoles.includes("RECEPTIONIST") || apiRoles.includes("ASSISTANT")) {
+    return {
+      id: profile.id,
+      name: apiRoles.includes("RECEPTIONIST") ? "الاستقبال" : displayName,
+      role: "secretary",
+    };
+  }
+
+  return null;
+}
+
 export function attemptRoleLogin(
   db: DentistDb,
   role: Role,
