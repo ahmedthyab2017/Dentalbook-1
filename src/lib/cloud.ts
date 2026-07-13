@@ -130,8 +130,10 @@ export const Cloud = {
     };
   },
 
-  isSuperAdmin(roles: string[] | undefined): boolean {
-    return !!roles?.includes("SUPER_ADMIN");
+  isSuperAdmin(roles: string[] | string | undefined): boolean {
+    if (!roles) return false;
+    const list = Array.isArray(roles) ? roles : [roles];
+    return list.some((r) => String(r) === "SUPER_ADMIN");
   },
 
   async refresh() {

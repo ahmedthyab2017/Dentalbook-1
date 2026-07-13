@@ -7,31 +7,55 @@ import { Building2, LogOut, Shield } from "lucide-react";
 import { Cloud } from "@/lib/cloud";
 import { isBackendEnabled } from "@/lib/backend";
 
+async function verifySuperAdmin(): Promise<{ ok: true; email: string } | { ok: false }> {
+  if (!isBackendEnabled() || !Cloud.loggedIn()) return { ok: false };
+  try {
+    const profile = await Cloud.me();
+    if (!Cloud.isSuperAdmin(profile.roles)) return { ok: false };
+    return { ok: true, email: profile.email };
+  } catch {
+    Cloud.logout();
+    return { ok: false };
+  }
+}
+
 export default function PlatformLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const [ready, setReady] = useState(false);
   const [email, setEmail] = useState("");
 
   useEffect(() => {
+    let active = true;
+
     async function guard() {
-      if (!isBackendEnabled() || !Cloud.loggedIn()) {
-        router.replace("/login");
+      const result = await verifySuperAdmin();
+      if (!active) return;
+      if (!result.ok) {
+        setReady(false);
+        router.replace("/login?reason=platform");
         return;
       }
-      try {
-        const profile = await Cloud.me();
-        if (!Cloud.isSuperAdmin(profile.roles)) {
-          router.replace("/login");
-          return;
-        }
-        setEmail(profile.email);
-        setReady(true);
-      } catch {
-        Cloud.logout();
-        router.replace("/login");
-      }
+      setEmail(result.email);
+      setReady(true);
     }
+
     guard();
+
+    function onFocus() {
+      verifySuperAdmin().then((result) => {
+        if (!active) return;
+        if (!result.ok) {
+          setReady(false);
+          router.replace("/login?reason=platform");
+        }
+      });
+    }
+
+    window.addEventListener("focus", onFocus);
+    return () => {
+      active = false;
+      window.removeEventListener("focus", onFocus);
+    };
   }, [router]);
 
   if (!ready) {

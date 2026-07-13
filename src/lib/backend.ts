@@ -67,8 +67,20 @@ const API_ERROR_AR: Record<string, string> = {
   EMAIL_TAKEN: "هذا البريد مستخدم مسبقاً — جرّب بريداً آخر",
   LICENSE_INVALID: "مفتاح الترخيص غير صالح — اتركه فارغاً أو استخدم DANTAL-DEV-CLINIC",
   LICENSE_UNAVAILABLE: "مفتاح الترخيص منتهٍ أو مستنفد",
-  FORBIDDEN: "ليس لديك صلاحية لهذه العملية",
+  FORBIDDEN: "هذا القسم لمدير المنصة فقط — سجّل دخولك بـ superadmin@dantal.clinic",
 };
+
+export function isPlatformForbidden(err: unknown): boolean {
+  if (!err || typeof err !== "object") return false;
+  const body = err as { errors?: string[]; message?: string };
+  if (body.errors?.includes("FORBIDDEN")) return true;
+  return /access denied/i.test(body.message || "");
+}
+
+export function redirectToPlatformLogin(router: { replace: (url: string) => void }) {
+  Cloud.logout();
+  router.replace("/login?reason=platform");
+}
 
 export function apiErrorMessage(err: unknown): string {
   if (!err || typeof err !== "object") return "فشل الاتصال بالخادم";

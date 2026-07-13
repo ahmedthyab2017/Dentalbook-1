@@ -19,9 +19,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ds";
-import { apiErrorMessage } from "@/lib/backend";
+import { apiErrorMessage, isPlatformForbidden, redirectToPlatformLogin } from "@/lib/backend";
 import { PlatformApi, type CreateClinicResult, type PlatformClinic } from "@/lib/platform-api";
 import { slideUp } from "@/lib/motion";
+import { useRouter } from "next/navigation";
 
 function formatDate(iso: string) {
   try {
@@ -36,6 +37,7 @@ function formatDate(iso: string) {
 }
 
 export default function PlatformClinicsPage() {
+  const router = useRouter();
   const [clinics, setClinics] = useState<PlatformClinic[]>([]);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
@@ -55,6 +57,10 @@ export default function PlatformClinicsPage() {
     try {
       setClinics(await PlatformApi.listClinics());
     } catch (err) {
+      if (isPlatformForbidden(err)) {
+        redirectToPlatformLogin(router);
+        return;
+      }
       setError(apiErrorMessage(err));
     } finally {
       setLoading(false);
@@ -91,6 +97,10 @@ export default function PlatformClinicsPage() {
       setSuccessOpen(true);
       await load();
     } catch (err) {
+      if (isPlatformForbidden(err)) {
+        redirectToPlatformLogin(router);
+        return;
+      }
       setError(apiErrorMessage(err));
     } finally {
       setBusy(false);
@@ -104,6 +114,10 @@ export default function PlatformClinicsPage() {
       await PlatformApi.setClinicActive(clinic.id, !clinic.active);
       await load();
     } catch (err) {
+      if (isPlatformForbidden(err)) {
+        redirectToPlatformLogin(router);
+        return;
+      }
       setError(apiErrorMessage(err));
     } finally {
       setBusy(false);
