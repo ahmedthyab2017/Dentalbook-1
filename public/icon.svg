@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0d5c7a"/>
+      <stop offset="1" stop-color="#06303d"/>
+    </linearGradient>
+    <linearGradient id="tooth" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#e8c468"/>
+      <stop offset="1" stop-color="#b08438"/>
+    </linearGradient>
+  </defs>
+  <!-- Maskable-safe: keep the mark inside the central ~80% safe zone -->
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <path d="M256 120c-66 0-110 36-110 102 0 44 14 95 29 146 8 28 22 102 51 102 22 0 29-58 29-88s14-29 29 0 7 88 29 88c29 0 43-74 51-102 15-51 29-102 29-146 0-66-44-102-110-102z"
+        fill="url(#tooth)" stroke="#ffffff" stroke-width="6" stroke-opacity="0.25"/>
+  <ellipse cx="218" cy="210" rx="20" ry="40" fill="#ffffff" opacity="0.3"/>
+</svg>

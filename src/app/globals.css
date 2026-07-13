@@ -1,0 +1,140 @@
+/* Layer order: utilities must win over legacy reset (* { margin:0 }) */
+@layer theme, legacy, base, utilities;
+
+@import "tailwindcss/theme" layer(theme);
+@import "tailwindcss/utilities" layer(utilities);
+@import "../design-system/tokens.css";
+@import "../styles/legacy-app.css" layer(legacy);
+
+@layer base {
+  html {
+    font-family: var(--font-arabic), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color-scheme: light;
+    background-color: var(--color-background);
+    overflow-x: hidden;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--color-primary) 25%, transparent);
+  }
+}
+
+@layer utilities {
+  .dantal-page {
+    @apply w-full min-h-full p-3 pb-4 sm:p-4 md:p-6 lg:p-8 xl:p-10;
+  }
+
+  .dantal-container {
+    @apply mx-auto w-full max-w-[1440px];
+  }
+
+  .dantal-focus {
+    @apply outline-none ring-0;
+  }
+
+  .dantal-focus:focus-visible {
+    @apply ring-2 ring-primary/70 ring-offset-2 ring-offset-background;
+  }
+
+  .dantal-card-grid {
+    @apply grid gap-4 sm:gap-5 lg:grid-cols-2 xl:grid-cols-3;
+  }
+
+  .dantal-table-scroll {
+    @apply overflow-x-auto rounded-[var(--radius-card)] border border-border;
+  }
+
+  .dantal-table-scroll table {
+    min-width: 640px;
+  }
+
+  .dantal-touch {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  .dantal-app {
+    @apply w-full min-h-screen;
+  }
+
+  .dantal-app main {
+    @apply w-full min-w-0 flex-1;
+    padding-bottom: max(5.5rem, calc(5.5rem + env(safe-area-inset-bottom)));
+  }
+
+  @media (min-width: 768px) {
+    .dantal-app main {
+      padding-bottom: 0;
+    }
+  }
+
+  .dantal-chart {
+    @apply w-full overflow-hidden;
+  }
+
+  .dantal-chart canvas {
+    display: block;
+    width: 100% !important;
+    max-width: none !important;
+    height: 200px !important;
+  }
+
+  .dantal-title {
+    @apply text-2xl font-semibold tracking-tight text-foreground md:text-3xl;
+  }
+
+  .dantal-subtitle {
+    @apply text-sm text-muted md:text-base;
+  }
+
+  .dantal-page-bg {
+    background:
+      radial-gradient(ellipse 80% 50% at 50% -20%, rgba(37, 99, 235, 0.06), transparent),
+      var(--color-background);
+  }
+
+  .dantal-hero-banner {
+    @apply relative overflow-hidden rounded-[22px] border border-primary/10 p-6 md:p-8;
+    background: linear-gradient(135deg, #0052ff 0%, #2563eb 45%, #06b6d4 100%);
+    box-shadow: 0 20px 40px -16px rgba(0, 82, 255, 0.45);
+  }
+
+  .dantal-toolbar {
+    @apply flex flex-wrap items-center gap-3 rounded-[18px] border border-border bg-surface p-3 shadow-[var(--shadow-soft)];
+  }
+
+  .legacy-chart-wrap .revenue-chart,
+  .legacy-chart-wrap canvas,
+  .legacy-chart-wrap svg,
+  .dantal-chart canvas {
+    max-width: none;
+  }
+
+  /* DS pages: keep legacy .card/.btn from breaking unmigrated inner markup */
+  .dantal-page .page-head,
+  .dantal-sidebar nav {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
+  }
+
+  .dantal-sidebar nav::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .dantal-sidebar nav::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.22);
+    border-radius: 999px;
+  }
+}
