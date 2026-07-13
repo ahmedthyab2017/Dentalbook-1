@@ -28,8 +28,6 @@ export default function LoginPage() {
   const [showPass, setShowPass] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [registerMode, setRegisterMode] = useState(false);
-  const [clinicNameInput, setClinicNameInput] = useState("");
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -76,15 +74,11 @@ export default function LoginPage() {
           autoSync: prev.autoSync ?? false,
         };
         updateMeta({ cloud });
-        if (registerMode) {
-          await Cloud.register(clinicNameInput.trim() || APP_BRAND, email.trim(), password);
-        } else {
-          await Cloud.login(email.trim(), password);
-          const profile = await Cloud.me();
-          if (Cloud.isSuperAdmin(profile.roles)) {
-            router.push("/platform/clinics");
-            return;
-          }
+        await Cloud.login(email.trim(), password);
+        const profile = await Cloud.me();
+        if (Cloud.isSuperAdmin(profile.roles)) {
+          router.push("/platform/clinics");
+          return;
         }
         await finishBackendAuth(cloud);
         return;
@@ -118,32 +112,11 @@ export default function LoginPage() {
             </h1>
             <p className="mt-4 max-w-sm text-[15px] leading-relaxed text-[#6b7c85]">
               مرحباً بك في{" "}
-              <span className="font-semibold text-[#374151]">{APP_BRAND}</span>.
-              {registerMode
-                ? " أنشئ حساب عيادتك للبدء."
-                : " سجّل الدخول لإدارة مواعيدك ومتابعة عيادتك."}
+              <span className="font-semibold text-[#374151]">{APP_BRAND}</span>. سجّل الدخول
+              لإدارة مواعيدك ومتابعة عيادتك.
             </p>
 
             <div className="mt-9 space-y-5">
-              {backendMode && registerMode && (
-                <div>
-                  <label className="mb-2 block text-sm font-semibold text-[#374151]">
-                    اسم العيادة<span className="text-[#366F7F]">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    autoComplete="organization"
-                    placeholder="اسم العيادة"
-                    value={clinicNameInput}
-                    onChange={(e) => setClinicNameInput(e.target.value)}
-                    className={cn(
-                      "h-[52px] w-full rounded-full border bg-white px-5 text-sm text-[#374151] outline-none transition-colors",
-                      "placeholder:text-[#b0bec5] focus:border-[#366F7F] focus:ring-2 focus:ring-[#366F7F]/15",
-                      "border-[#d1dde3]"
-                    )}
-                  />
-                </div>
-              )}
               <div>
                 <label className="mb-2 block text-sm font-semibold text-[#374151]">
                   {backendMode ? "البريد الإلكتروني" : "اسم المستخدم"}
@@ -213,26 +186,10 @@ export default function LoginPage() {
                     <Loader2 className="h-5 w-5 animate-spin" />
                     جاري الدخول...
                   </>
-                ) : registerMode ? (
-                  "إنشاء حساب"
                 ) : (
                   "تسجيل الدخول"
                 )}
               </button>
-
-              {backendMode && (
-                <button
-                  type="button"
-                  disabled={loading}
-                  onClick={() => {
-                    setError("");
-                    setRegisterMode((v) => !v);
-                  }}
-                  className="w-full text-center text-sm text-[#366F7F] hover:underline disabled:opacity-60"
-                >
-                  {registerMode ? "لديك حساب؟ تسجيل الدخول" : "إنشاء عيادة جديدة"}
-                </button>
-              )}
             </div>
           </div>
 
