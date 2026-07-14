@@ -2,28 +2,14 @@
 
 import { motion } from "framer-motion";
 import type { CSSProperties } from "react";
-import { Tooth3D } from "./Tooth3D";
+import { Tooth } from "../dental-chart/Tooth";
+import { getMorphType } from "../dental-chart/toothPaths";
 import type { ToothState } from "@/types/db";
 import { getToothCategory } from "@/lib/tooth";
 import { cn } from "@/lib/cn";
 
-/**
- * Interactive tooth cell shared by the main chart + QuickFlow chart.
- * Handles the premium hover (scale 1.08 + blue glow, 200ms) and selected
- * (blue outline + soft glow + slight lift) motion states; arch curvature
- * is applied on the outer wrapper via a static CSS transform so it never
- * fights with the Framer Motion interaction transform.
- */
 export function ToothCell({
-  num,
-  jaw,
-  state,
-  selected = false,
-  archStyle,
-  onClick,
-  label,
-  wrapClassName,
-  cellClassName,
+  num, jaw, state, selected = false, archStyle, onClick, label, wrapClassName, cellClassName,
 }: {
   num: number;
   jaw: "upper" | "lower";
@@ -36,12 +22,11 @@ export function ToothCell({
   cellClassName?: string;
 }) {
   const category = getToothCategory(num);
+  const morphType = getMorphType(num);
 
   return (
     <div className={cn("tooth-cell-arch", `tc-${category}`, wrapClassName)} style={archStyle}>
-      {jaw === "upper" && (
-        <span className="tooth-num tooth-num-top">{num}</span>
-      )}
+      {jaw === "upper" && <span className="tooth-num tooth-num-top">{num}</span>}
       <motion.button
         type="button"
         className={cn("tooth-cell", `t-${state}`, selected && "selected", cellClassName)}
@@ -54,11 +39,9 @@ export function ToothCell({
         whileTap={{ scale: 0.96 }}
         transition={{ duration: 0.2, ease: "easeOut" }}
       >
-        <Tooth3D num={num} state={state} className="tooth-svg" />
+        <Tooth type={morphType} status={state} num={num} jaw={jaw} selected={selected} className="tooth-svg" />
       </motion.button>
-      {jaw === "lower" && (
-        <span className="tooth-num tooth-num-bottom">{num}</span>
-      )}
+      {jaw === "lower" && <span className="tooth-num tooth-num-bottom">{num}</span>}
     </div>
   );
 }

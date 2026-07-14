@@ -1,4 +1,4 @@
-const CACHE_NAME = "dentalbook-pwa-v3";
+const CACHE_NAME = "dentalbook-pwa-v4";
 const APP_SHELL = ["/", "/manifest.json", "/icon.svg", "/offline.html"];
 
 self.addEventListener("install", (event) => {

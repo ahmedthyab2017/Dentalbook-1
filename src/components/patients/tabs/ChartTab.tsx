@@ -30,6 +30,11 @@ export function ChartTab({ patient }: { patient: Patient }) {
         chart={chart}
         selected={selected}
         onToothClick={(n) => setSelected(selected === n ? null : n)}
+        onStatusChange={(num, state) => {
+          updatePatient(patient.id, { chart: { ...chart, [String(num)]: state } });
+          setSelected(num);
+        }}
+        onOpenDetails={(num) => setSelected(num)}
         lang="ar"
       />
       <div className="chart-legend">

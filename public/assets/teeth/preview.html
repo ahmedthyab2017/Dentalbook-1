@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tooth SVG Asset Preview — dentalbook</title>
+  <style>
+    :root {
+      --bg: #0a1220;
+      --panel: #102138;
+      --border: rgba(59, 130, 246, 0.22);
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --accent: #60a5fa;
+      --primary-tag: #059669;
+      --ref-tag: #d97706;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", system-ui, sans-serif;
+      background: radial-gradient(ellipse 120% 80% at 50% 0%, #102138 0%, var(--bg) 55%);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 24px 20px 48px;
+    }
+
+    header {
+      max-width: 1400px;
+      margin: 0 auto 28px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .lead {
+      margin: 0 0 12px;
+      color: var(--muted);
+      line-height: 1.55;
+      max-width: 820px;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .meta span {
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.55);
+    }
+
+    section {
+      max-width: 1400px;
+      margin: 0 auto 36px;
+    }
+
+    h2 {
+      margin: 0 0 6px;
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .section-note {
+      margin: 0 0 16px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    .grid.wide {
+      grid-template-columns: 1fr;
+    }
+
+    .card {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: var(--panel);
+      overflow: hidden;
+      box-shadow: 0 12px 32px -12px rgba(0, 0, 0, 0.55);
+    }
+
+    .card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.45);
+    }
+
+    .filename {
+      font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+      font-size: 0.78rem;
+      word-break: break-all;
+      color: var(--accent);
+    }
+
+    .tag {
+      flex-shrink: 0;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 999px;
+      color: #fff;
+    }
+
+    .tag.primary { background: var(--primary-tag); }
+    .tag.reference { background: var(--ref-tag); }
+
+    .canvas {
+      position: relative;
+      min-height: 220px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background:
+        linear-gradient(45deg, rgba(255,255,255,0.04) 25%, transparent 25%),
+        linear-gradient(-45deg, rgba(255,255,255,0.04) 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, rgba(255,255,255,0.04) 75%),
+        linear-gradient(-45deg, transparent 75%, rgba(255,255,255,0.04) 75%),
+        #0d1628;
+      background-size: 16px 16px;
+      background-position: 0 0, 0 8px, 8px -8px, -8px 0;
+    }
+
+    .canvas.tall { min-height: 360px; }
+    .canvas.xwide { min-height: 480px; padding: 24px; }
+
+    .canvas img,
+    .canvas object {
+      max-width: 100%;
+      max-height: 320px;
+      width: auto;
+      height: auto;
+      display: block;
+      filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.35));
+    }
+
+    .canvas.xwide img,
+    .canvas.xwide object {
+      max-height: 520px;
+    }
+
+    .card-foot {
+      padding: 10px 14px 12px;
+      font-size: 0.8rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
+
+    .checker-note {
+      max-width: 1400px;
+      margin: 0 auto 20px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      background: rgba(234, 179, 8, 0.08);
+      color: #fde68a;
+      font-size: 0.88rem;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Tooth SVG asset preview</h1>
+    <p class="lead">
+      Visual verification only — assets are <strong>not integrated</strong> into the dental chart yet.
+      Check that each file shows realistic crown/root anatomy (not flat icons or schematic blocks).
+    </p>
+    <div class="meta">
+      <span>11 SVG files</span>
+      <span>Folder: <code>public/assets/teeth/</code></span>
+      <span><a href="./SOURCES.md" style="color: var(--accent);">SOURCES.md</a></span>
+    </div>
+  </header>
+
+  <div class="checker-note">
+    <strong>How to judge realism:</strong>
+    Primary templates (green tag) should show enamel gradients, roots, and tooth-type-specific shapes.
+    Reference files (orange tag) are educational diagrams — some are full arches or cross-sections, not single chart cells.
+  </div>
+
+  <section>
+    <h2>Primary odontogram templates</h2>
+    <p class="section-note">MIT-licensed buccal/occlusal templates from React-Odontogram-Modul — intended for chart rendering.</p>
+    <div class="grid" id="primary-grid"></div>
+  </section>
+
+  <section>
+    <h2>Reference diagrams</h2>
+    <p class="section-note">Wikimedia Commons &amp; Public Domain supplements — for anatomy reference, not direct chart cells.</p>
+    <div class="grid wide" id="reference-grid"></div>
+  </section>
+
+  <script>
+    const PRIMARY = [
+      { file: "incisor-labial.svg", note: "Central/lateral incisors — flat crown, single root" },
+      { file: "canine-labial.svg", note: "Canines — pointed cusp, long root" },
+      { file: "premolar-labial.svg", note: "Premolars — buccal view" },
+      { file: "premolar-occlusal.svg", note: "Premolars — occlusal view" },
+      { file: "molar-labial.svg", note: "Molars — buccal view, multi-root" },
+      { file: "molar-occlusal.svg", note: "Molars — occlusal cusps" },
+    ];
+
+    const REFERENCE = [
+      { file: "reference-full-dental-arches.svg", note: "Full upper + lower arch (Kaligula, CC BY-SA 3.0)", xwide: true },
+      { file: "reference-types-overview.svg", note: "Incisor / canine / premolar / molar comparison", tall: true },
+      { file: "reference-tooth-unlabeled.svg", note: "Unlabeled molar labial anatomy", tall: true },
+      { file: "reference-molar-cross-section-labeled.svg", note: "Labeled cross-section (enamel, dentin, pulp…)", tall: true },
+      { file: "reference-tooth-cut-half.svg", note: "Simplified cutaway (Public Domain)", tall: true },
+    ];
+
+    function renderCard(item, kind) {
+      const card = document.createElement("article");
+      card.className = "card";
+
+      const head = document.createElement("div");
+      head.className = "card-head";
+      head.innerHTML =
+        '<span class="filename">' + item.file + '</span>' +
+        '<span class="tag ' + kind + '">' + (kind === "primary" ? "Primary" : "Reference") + '</span>';
+
+      const canvas = document.createElement("div");
+      canvas.className = "canvas" + (item.xwide ? " xwide" : item.tall ? " tall" : "");
+
+      const img = document.createElement("img");
+      img.src = "./" + item.file;
+      img.alt = item.file;
+      img.loading = "lazy";
+      img.onerror = function () {
+        const obj = document.createElement("object");
+        obj.type = "image/svg+xml";
+        obj.data = "./" + item.file;
+        obj.style.maxWidth = "100%";
+        obj.style.maxHeight = item.xwide ? "520px" : "320px";
+        canvas.replaceChild(obj, img);
+      };
+      canvas.appendChild(img);
+
+      const foot = document.createElement("div");
+      foot.className = "card-foot";
+      foot.textContent = item.note;
+
+      card.append(head, canvas, foot);
+      return card;
+    }
+
+    const primaryGrid = document.getElementById("primary-grid");
+    PRIMARY.forEach(function (item) {
+      primaryGrid.appendChild(renderCard(item, "primary"));
+    });
+
+    const referenceGrid = document.getElementById("reference-grid");
+    REFERENCE.forEach(function (item) {
+      referenceGrid.appendChild(renderCard(item, "reference"));
+    });
+  </script>
+</body>
+</html>

@@ -60,6 +60,19 @@
   padding: 6px 0;
 }
 
+.chart-arch .dc-gum-layer {
+  position: absolute;
+  left: 2%;
+  right: 2%;
+  height: 52px;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.chart-arch.upper .dc-gum-layer { bottom: 18px; }
+.chart-arch.lower .dc-gum-layer { top: 18px; }
+.chart-arch .chart-row { position: relative; z-index: 1; }
+
 .chart-row {
   display: flex;
   justify-content: center;
@@ -324,8 +337,38 @@
 }
 
 /* hide legacy orient labels (replaced by dc-jaw-divider) */
-.dc-orient {
-  display: none;
+.dc-orient { display: none; }
+
+.dc-popover-backdrop {
+  position: fixed; inset: 0; z-index: 90; border: none;
+  background: rgba(8, 15, 30, 0.45); cursor: default;
+}
+.dc-tooth-popover {
+  position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); z-index: 91;
+  width: min(420px, calc(100vw - 32px)); padding: 14px 16px 16px; border-radius: 16px;
+  border: 1px solid rgba(96, 165, 250, 0.35);
+  background: linear-gradient(180deg, #1a2740 0%, #0f172a 100%);
+  box-shadow: 0 20px 48px -12px rgba(0, 0, 0, 0.65);
+}
+.dc-popover-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+.dc-popover-head strong { font-size: 1rem; color: #e2e8f0; }
+.dc-popover-close {
+  appearance: none; border: none; background: rgba(148, 163, 184, 0.15); color: #94a3b8;
+  width: 28px; height: 28px; border-radius: 8px; font-size: 1.1rem; cursor: pointer;
+}
+.dc-popover-hint { margin: 0 0 12px; font-size: 0.82rem; color: #94a3b8; }
+.dc-popover-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.dc-popover-status {
+  display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.2); background: rgba(15, 23, 42, 0.6);
+  color: #cbd5e1; font-size: 0.82rem; font-weight: 600; cursor: pointer;
+}
+.dc-popover-status i { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.dc-popover-status.on { border-color: #60a5fa; background: rgba(59, 130, 246, 0.2); color: #f1f5f9; }
+.dc-popover-details {
+  display: block; width: 100%; margin-top: 12px; padding: 9px 12px;
+  border: 1px dashed rgba(96, 165, 250, 0.35); border-radius: 10px; background: transparent;
+  color: #60a5fa; font-size: 0.85rem; font-weight: 600; cursor: pointer;
 }
 
 @media (max-width: 680px) {
