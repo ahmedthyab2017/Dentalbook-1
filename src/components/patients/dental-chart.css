@@ -35,7 +35,7 @@
 }
 
 /* ── Chart panel ── */
-.dental-chart-wrap > .dental-chart {
+.dental-chart-wrap .dental-chart {
   position: relative;
   background: radial-gradient(ellipse 120% 80% at 50% 50%, #102138 0%, #0a1220 55%, #060d18 100%);
   border: 1px solid rgba(59, 130, 246, 0.18);
@@ -219,14 +219,14 @@
   justify-content: center;
 }
 
-.tooth-svg {
-  width: 40px;
+.dental-chart-wrap .tooth-svg {
+  width: 46px;
   height: auto;
   display: block;
   filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.35));
 }
 
-.dental-chart-deciduous .tooth-svg {
+.dental-chart-wrap .dental-chart-deciduous .tooth-svg {
   width: 30px;
 }
 

@@ -635,61 +635,7 @@ body[dir="ltr"] .toast { animation-name: toastInLtr; }
 .empty-title { font-family: var(--display-font); font-size: 18px; color: var(--ink-700); margin-bottom: 4px; }
 .empty-sub { font-size: 13px; }
 
-/* ═══ DENTAL CHART ═══ */
-.dental-chart {
-  background:
-    radial-gradient(120% 80% at 50% -10%, rgba(255,255,255,.7), transparent 60%),
-    linear-gradient(180deg, #e9fbff 0%, #d2f0f7 100%);
-  border: 1px solid #b6e4ee;
-  border-radius: 18px;
-  padding: 22px 16px;
-  overflow-x: auto;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.7), 0 10px 30px -18px rgba(5,150,105,.4);
-}
-.chart-arch { padding: 4px 0; }
-.chart-arch.upper { border-bottom: 1.5px dashed rgba(5,150,105,.25); margin-bottom: 4px; padding-bottom: 10px; }
-.arch-mid { width: 2px; align-self: stretch; margin: 0 6px; background: rgba(5,150,105,.22); border-radius: 2px; }
-
-/* anatomical SVG teeth */
-.tooth-cell {
-  display: flex; flex-direction: column; align-items: center; gap: 1px;
-  cursor: pointer; user-select: none;
-}
-.tooth-svg { width: 30px; height: auto; transition: transform .14s ease, filter .14s ease; }
-.tooth-svg .root  { fill: #f4ead4; stroke: #d4c39c; stroke-width: 1; }
-.tooth-svg .crown { fill: #ffffff; stroke: #aebfc8; stroke-width: 1.4; }
-.tooth-svg .groove { stroke: rgba(120,140,150,.5); stroke-width: 1; fill: none; }
-.tooth-svg .caries { fill: transparent; }
-.tooth-svg .xmark  { stroke: transparent; stroke-width: 2.4; stroke-linecap: round; fill: none; }
-.tooth-cell:hover .tooth-svg { transform: translateY(-3px) scale(1.07); filter: drop-shadow(0 5px 9px rgba(5,150,105,.4)); }
-.tooth-num { font: 700 9px var(--en-font); color: #5b6b73; }
-.tooth-cell.selected .tooth-svg { transform: translateY(-3px) scale(1.1); }
-.tooth-cell.selected .tooth-svg .crown { stroke: #059669; stroke-width: 2.2; }
-.tooth-cell.selected .tooth-num { color: #059669; font-weight: 800; }
-
-/* per-state crown colours */
-.t-filling .crown { fill: #3b82f6; stroke: #2563eb; }
-.t-decay   .crown { fill: #efe7d6; }
-.t-decay   .caries { fill: #7a4a1e; }
-.t-rct     .crown { fill: #a78bfa; stroke: #7c3aed; }
-.t-crown   .crown { fill: #e6bd4f; stroke: #b08438; }
-.t-crown   .root  { fill: #efe2c4; }
-.t-missing .crown { fill: #e7edf0; stroke: #c4d0d7; }
-.t-missing .root  { fill: #eef2f4; stroke: #d6dfe4; }
-.t-missing .xmark { stroke: #b23b3b; }
-.t-missing { opacity: .85; }
-
-/* dark-theme variants for the chart */
-body.theme-dark .dental-chart {
-  background:
-    radial-gradient(120% 80% at 50% -10%, rgba(5,150,105,.18), transparent 60%),
-    linear-gradient(180deg, #0c3947 0%, #0a2c39 100%);
-  border-color: rgba(5,150,105,.28);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.05), 0 12px 34px -20px rgba(0,0,0,.6);
-}
-body.theme-dark .chart-arch.upper { border-bottom-color: rgba(110,231,183,.22); }
-body.theme-dark .tooth-num { color: #9fc0cd; }
-body.theme-dark .legend-item { color: #cfe3ec; }
+/* Dental chart styles → see components/patients/dental-chart.css (Tooth3D) */
 
 /* profile hero: photo + identity + QR */
 .profile-hero {

@@ -10,7 +10,6 @@ import {
   type Dentition,
 } from "@/lib/tooth";
 import type { ToothState } from "@/types/db";
-import "./dental-chart.css";
 
 export type DentalChartRenderProps = {
   num: number;
