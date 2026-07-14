@@ -212,7 +212,7 @@
     0 10px 20px -6px rgba(37, 99, 235, 0.6);
 }
 
-/* ── Tooth SVG graphics ── */
+/* ── Tooth SVG graphics — width varies by anatomical type ── */
 .dc-tooth-graphic {
   display: flex;
   align-items: center;
@@ -226,6 +226,27 @@
   filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.35));
 }
 
+/* incisors — narrow flat crowns */
+.dental-chart-wrap .tc-central .tooth-svg { width: 32px; }
+.dental-chart-wrap .tc-lateral .tooth-svg { width: 30px; }
+.dental-chart-wrap .tc-dcCentral .tooth-svg { width: 26px; }
+.dental-chart-wrap .tc-dcLateral .tooth-svg { width: 24px; }
+
+/* canine — tall pointed crown */
+.dental-chart-wrap .tc-canine .tooth-svg { width: 38px; }
+.dental-chart-wrap .tc-dcCanine .tooth-svg { width: 32px; }
+
+/* premolars — medium width + occlusal table */
+.dental-chart-wrap .tc-premolar1 .tooth-svg { width: 44px; }
+.dental-chart-wrap .tc-premolar2 .tooth-svg { width: 42px; }
+
+/* molars — widest crowns + multi-root */
+.dental-chart-wrap .tc-molar1 .tooth-svg { width: 56px; }
+.dental-chart-wrap .tc-molar2 .tooth-svg { width: 52px; }
+.dental-chart-wrap .tc-molar3 .tooth-svg { width: 48px; }
+.dental-chart-wrap .tc-dcMolar1 .tooth-svg,
+.dental-chart-wrap .tc-dcMolar2 .tooth-svg { width: 40px; }
+
 .dental-chart-wrap .dental-chart-deciduous .tooth-svg {
   width: 30px;
 }
@@ -238,7 +259,7 @@
   filter: drop-shadow(0 8px 16px rgba(96, 165, 250, 0.6));
 }
 
-/* deciduous sizing */
+/* deciduous sizing overrides per-type above */
 .dental-chart-deciduous .chart-row {
   gap: 1px;
 }
@@ -308,12 +329,19 @@
 }
 
 @media (max-width: 680px) {
-  .tooth-svg {
-    width: 30px;
-  }
-  .dental-chart-deciduous .tooth-svg {
-    width: 23px;
-  }
+  .dental-chart-wrap .tc-central .tooth-svg { width: 26px; }
+  .dental-chart-wrap .tc-lateral .tooth-svg { width: 24px; }
+  .dental-chart-wrap .tc-dcCentral .tooth-svg { width: 22px; }
+  .dental-chart-wrap .tc-dcLateral .tooth-svg { width: 20px; }
+  .dental-chart-wrap .tc-canine .tooth-svg { width: 30px; }
+  .dental-chart-wrap .tc-dcCanine .tooth-svg { width: 26px; }
+  .dental-chart-wrap .tc-premolar1 .tooth-svg { width: 34px; }
+  .dental-chart-wrap .tc-premolar2 .tooth-svg { width: 32px; }
+  .dental-chart-wrap .tc-molar1 .tooth-svg { width: 42px; }
+  .dental-chart-wrap .tc-molar2 .tooth-svg { width: 40px; }
+  .dental-chart-wrap .tc-molar3 .tooth-svg { width: 36px; }
+  .dental-chart-wrap .tc-dcMolar1 .tooth-svg,
+  .dental-chart-wrap .tc-dcMolar2 .tooth-svg { width: 32px; }
   .dc-chart-inner {
     min-width: 600px;
   }

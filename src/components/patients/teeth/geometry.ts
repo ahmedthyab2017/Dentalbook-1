@@ -195,15 +195,15 @@ function buildIncisor(jaw: Jaw, size: "central" | "lateral", deciduous = false):
   const upper = jaw === "upper";
   const central = size === "central";
   const scale = deciduous ? 0.86 : 1;
-  const topHalfW = (central ? (upper ? 24 : 15) : upper ? 19 : 17) * scale;
-  const bulgeHalfW = topHalfW + (upper ? 5 : 3);
+  const topHalfW = (central ? (upper ? 16 : 12) : upper ? 14 : 13) * scale;
+  const bulgeHalfW = topHalfW + (upper ? 4 : 2.5);
   const cervicalHalfW = bulgeHalfW * 0.56;
   const topY = upper ? 16 : 22;
   const cervicalY = CERV_Y - (upper ? 0 : 4);
   const bulgeY = topY + (cervicalY - topY) * 0.42;
   const rootLen = (upper ? (central ? 74 : 68) : central ? 58 : 62) * scale;
   return {
-    crown: crownFlat({ topY, cervicalY, topHalfW, bulgeHalfW, bulgeY, cervicalHalfW, cornerR: central ? 3.2 : 4.4 }),
+    crown: crownFlat({ topY, cervicalY, topHalfW, bulgeHalfW, bulgeY, cervicalHalfW, cornerR: central ? 1.8 : 3.2 }),
     crownTip: "flat",
     incisalEdge: `M ${round(50 - topHalfW + 3)} ${round(topY + 1.5)} L ${round(50 + topHalfW - 3)} ${round(topY + 1.5)}`,
     grooves: central
@@ -219,11 +219,11 @@ function buildIncisor(jaw: Jaw, size: "central" | "lateral", deciduous = false):
 function buildCanine(jaw: Jaw, deciduous = false): ToothVisual {
   const upper = jaw === "upper";
   const scale = deciduous ? 0.88 : 1;
-  const shoulderHalfW = 20 * scale;
-  const bulgeHalfW = 24 * scale;
+  const shoulderHalfW = 17 * scale;
+  const bulgeHalfW = 20 * scale;
   const cervicalHalfW = bulgeHalfW * 0.52;
-  const tipY = (upper ? 12 : 18) * (deciduous ? 1.05 : 1);
-  const shoulderY = tipY + 14 * scale;
+  const tipY = (upper ? 5 : 10) * (deciduous ? 1.05 : 1);
+  const shoulderY = tipY + 18 * scale;
   const cervicalY = CERV_Y - (upper ? 0 : 4);
   const bulgeY = shoulderY + (cervicalY - shoulderY) * 0.45;
   const rootLen = (upper ? 86 : 70) * scale;
@@ -240,14 +240,14 @@ function buildCanine(jaw: Jaw, deciduous = false): ToothVisual {
 
 function buildPremolar(jaw: Jaw, which: 1 | 2): ToothVisual {
   const upper = jaw === "upper";
-  const topHalfW = (upper ? 25 : 22) * (which === 1 ? 1 : 0.92);
+  const topHalfW = (upper ? (which === 1 ? 22 : 20) : which === 1 ? 20 : 18) * (which === 1 ? 1 : 0.92);
   const bulgeHalfW = topHalfW + 4;
   const cervicalHalfW = bulgeHalfW * 0.58;
   const topY = 20;
   const cervicalY = CERV_Y;
   const bulgeY = topY + (cervicalY - topY) * 0.5;
   const cusps = which === 1 && !upper ? 2 : upper ? 2 : 3;
-  const occ = occlusalTable(50, topY + 9, topHalfW * 0.82, 9, cusps);
+  const occ = occlusalTable(50, topY + 7, topHalfW * 0.86, 11, cusps);
   const rootLen = upper ? 62 : 66;
   let roots: string[];
   if (which === 1 && upper) roots = twoRoots(cervicalY - 4, cervicalHalfW, rootLen, 7);
@@ -268,8 +268,8 @@ function buildMolar(jaw: Jaw, which: 1 | 2 | 3, deciduous = false): ToothVisual 
   const upper = jaw === "upper";
   const bigness = which === 1 ? 1 : which === 2 ? 0.92 : 0.78;
   const decidScale = deciduous ? 0.82 : 1;
-  const topHalfW = (upper ? 33 : 34) * bigness * decidScale;
-  const bulgeHalfW = topHalfW + 3;
+  const topHalfW = (upper ? 38 : 40) * bigness * decidScale;
+  const bulgeHalfW = topHalfW + 4;
   const cervicalHalfW = bulgeHalfW * 0.66;
   const topY = 20;
   const cervicalY = CERV_Y;
@@ -277,12 +277,12 @@ function buildMolar(jaw: Jaw, which: 1 | 2 | 3, deciduous = false): ToothVisual 
   // Lower first molars carry the classic 5-cusp Y-groove pattern; second
   // molars drop the distal cusp; third molars are the most variable/simplified.
   const cuspCount = upper ? (which === 3 ? 3 : 4) : which === 1 ? 5 : 4;
-  const occ = occlusalTable(50, topY + 11, topHalfW * 0.84, 11, cuspCount);
+  const occ = occlusalTable(50, topY + 6, topHalfW * 0.9, 14, cuspCount);
   const rootBaseY = cervicalY - 4;
   const rootLen = (which === 1 ? 58 : which === 2 ? 52 : 40) * decidScale;
   let roots: string[];
-  if (upper) roots = threeRoots(rootBaseY, cervicalHalfW, rootLen, which === 3 ? 6 : 9);
-  else roots = twoRoots(rootBaseY, cervicalHalfW, rootLen, which === 3 ? 5 : 8);
+  if (upper) roots = threeRoots(rootBaseY, cervicalHalfW, rootLen, which === 3 ? 8 : 11);
+  else roots = twoRoots(rootBaseY, cervicalHalfW, rootLen, which === 3 ? 7 : 10);
   return {
     crown: crownDome({ topY, cervicalY, topHalfW, bulgeHalfW, bulgeY, cervicalHalfW }),
     crownTip: "dome",

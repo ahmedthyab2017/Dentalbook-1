@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import type { CSSProperties } from "react";
 import { Tooth3D } from "./Tooth3D";
 import type { ToothState } from "@/types/db";
+import { getToothCategory } from "@/lib/tooth";
 import { cn } from "@/lib/cn";
 
 /**
@@ -34,8 +35,10 @@ export function ToothCell({
   wrapClassName?: string;
   cellClassName?: string;
 }) {
+  const category = getToothCategory(num);
+
   return (
-    <div className={cn("tooth-cell-arch", wrapClassName)} style={archStyle}>
+    <div className={cn("tooth-cell-arch", `tc-${category}`, wrapClassName)} style={archStyle}>
       {jaw === "upper" && (
         <span className="tooth-num tooth-num-top">{num}</span>
       )}

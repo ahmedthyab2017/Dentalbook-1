@@ -1,4 +1,6 @@
 import { getToothScale, getToothVisualByNumber, TOOTH_VIEWBOX_H, TOOTH_VIEWBOX_W } from "./geometry";
+import { getToothCategory } from "@/lib/tooth";
+import { cn } from "@/lib/cn";
 import type { ToothState } from "@/types/db";
 
 export type ToothStatusStyle = {
@@ -120,15 +122,18 @@ export function Tooth3D({
   showShadow?: boolean;
 }) {
   const geo = getToothVisualByNumber(num);
+  const category = getToothCategory(num);
   const scale = getToothScale(num);
   const style = getToothStatusStyle(state);
   const caries = state === "decay";
   const filled = state === "filling";
   const accentPoint = geo.cuspDots[0] || { x: 50, y: geo.cervicalY * 0.32 };
+  const isPosterior = geo.crownTip === "dome";
 
   return (
     <svg
-      className={className}
+      className={cn(className, `tt-${category}`)}
+      data-tooth-type={category}
       viewBox={`0 0 ${TOOTH_VIEWBOX_W} ${TOOTH_VIEWBOX_H}`}
       role="img"
       aria-hidden="true"
@@ -164,6 +169,42 @@ export function Tooth3D({
         {/* crown */}
         <path className="tooth-crown" d={geo.crown} fill={style.crownFill} stroke={style.crownStroke} strokeWidth={0.9} />
 
+        {/* buccal cusp hints on premolars/molars (visible from labial view) */}
+        {isPosterior && (
+          <g pointerEvents="none" opacity={0.55}>
+            <ellipse cx={50 - geo.crownHalfWidth * 0.42} cy={geo.cervicalY * 0.26} rx={geo.crownHalfWidth * 0.2} ry={5.5} fill="rgba(255,255,255,0.45)" />
+            <ellipse cx={50 + geo.crownHalfWidth * 0.42} cy={geo.cervicalY * 0.26} rx={geo.crownHalfWidth * 0.2} ry={5.5} fill="rgba(255,255,255,0.45)" />
+            <path
+              d={`M ${50 - geo.crownHalfWidth * 0.15} ${geo.cervicalY * 0.18} L ${50} ${geo.cervicalY * 0.14} L ${50 + geo.crownHalfWidth * 0.15} ${geo.cervicalY * 0.18}`}
+              stroke="rgba(120,140,150,0.35)"
+              strokeWidth={0.7}
+              fill="none"
+            />
+          </g>
+        )}
+
+        {/* flat incisal band on anterior teeth */}
+        {geo.crownTip === "flat" && geo.incisalEdge && (
+          <rect
+            x={50 - geo.crownHalfWidth * 0.72}
+            y={geo.cervicalY * 0.12}
+            width={geo.crownHalfWidth * 1.44}
+            height={4}
+            rx={1}
+            fill="rgba(255,255,255,0.55)"
+            pointerEvents="none"
+          />
+        )}
+
+        {/* canine cusp highlight */}
+        {geo.crownTip === "point" && (
+          <path
+            d={`M 50 ${geo.cervicalY * 0.08} L ${50 - geo.crownHalfWidth * 0.22} ${geo.cervicalY * 0.22} L ${50 + geo.crownHalfWidth * 0.22} ${geo.cervicalY * 0.22} Z`}
+            fill="rgba(255,255,255,0.5)"
+            pointerEvents="none"
+          />
+        )}
+
         {/* ambient occlusion at the cervical (neck) line */}
         <ellipse cx={50} cy={geo.cervicalY - 2} rx={geo.crownHalfWidth * 0.72} ry={5.5} fill="url(#tc-ao)" pointerEvents="none" />
 
@@ -178,9 +219,9 @@ export function Tooth3D({
         {/* occlusal biting table (premolars/molars) */}
         {geo.occlusalOutline && (
           <g pointerEvents="none">
-            <path d={geo.occlusalOutline} fill="url(#tc-occlusal-shade)" stroke="rgba(120,140,150,0.35)" strokeWidth={0.5} />
+            <path d={geo.occlusalOutline} fill="url(#tc-occlusal-shade)" stroke="rgba(80,95,105,0.55)" strokeWidth={0.8} />
             {geo.grooves.map((g, i) => (
-              <path key={i} d={g} stroke="rgba(90,105,115,0.4)" strokeWidth={0.6} fill="none" strokeLinecap="round" />
+              <path key={i} d={g} stroke="rgba(70,85,95,0.55)" strokeWidth={0.75} fill="none" strokeLinecap="round" />
             ))}
           </g>
         )}
