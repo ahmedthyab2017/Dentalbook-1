@@ -29,7 +29,7 @@ function overlayClass(state: ToothState): string | null {
 export function ToothAssetSvg({
   num,
   status,
-  jaw: _jaw,
+  jaw,
   className,
 }: {
   num: number;
@@ -39,13 +39,16 @@ export function ToothAssetSvg({
 }) {
   const src = getToothAssetSrc(num);
   const ov = overlayClass(status);
+  const upper = jaw === "upper";
 
   return (
     <span className={cn("tooth-asset-shell", className)}>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={src} alt="" className="tooth-asset-img" draggable={false} />
-      {ov && <span className={ov} aria-hidden />}
-      {status === "extraction" && <span className="tooth-ov-x" aria-hidden>×</span>}
+      <span className={cn("tooth-asset-body", upper && "tooth-asset-upper")}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={src} alt="" className="tooth-asset-img" draggable={false} />
+        {ov && <span className={ov} aria-hidden />}
+        {status === "extraction" && <span className="tooth-ov-x" aria-hidden>×</span>}
+      </span>
     </span>
   );
 }

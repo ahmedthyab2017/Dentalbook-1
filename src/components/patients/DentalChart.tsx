@@ -33,15 +33,16 @@ type DentalChartProps = {
   className?: string;
 };
 
+/** Curvature from midline (0) to distal (count-1). Clinician view: right quadrants distal→mesial, left mesial→distal. */
 export function archStyle(idx: number, count: number, side: "right" | "left", jaw: "upper" | "lower"): CSSProperties {
   const fromMid = side === "right" ? count - 1 - idx : idx;
   const sign = side === "right" ? 1 : -1;
   const jawSign = jaw === "upper" ? 1 : -1;
   const t = count > 1 ? fromMid / (count - 1) : 0;
-  const angleDeg = t * 34;
+  const angleDeg = t * 26;
   const angleRad = (angleDeg * Math.PI) / 180;
-  const lift = 52 * (1 - Math.cos(angleRad)) * jawSign;
-  return { "--arch-tilt": `${sign * angleDeg * 0.62}deg`, "--arch-lift": `${lift}px` } as CSSProperties;
+  const lift = 38 * (1 - Math.cos(angleRad)) * jawSign;
+  return { "--arch-tilt": `${sign * angleDeg * 0.55}deg`, "--arch-lift": `${lift}px` } as CSSProperties;
 }
 
 function defaultRenderTooth(props: DentalChartRenderProps & { onToothClick?: (n: number) => void; lang: "ar" | "en" }) {
@@ -97,17 +98,41 @@ export function DentalChart({
         <div className="dc-chart-inner">
           <div className="chart-arch upper">
             <div className="chart-row">
-              {arch.upperRight.map((n, i) => renderArchTooth(n, "upper", i, "right", arch.upperRight.length))}
-              <span className="arch-mid" />
-              {arch.upperLeft.map((n, i) => renderArchTooth(n, "upper", i, "left", arch.upperLeft.length))}
+              <div className="chart-quadrant chart-quadrant-right">
+                {arch.upperRight.map((n, i) => (
+                  <div className="tooth-slot" key={n}>
+                    {renderArchTooth(n, "upper", i, "right", arch.upperRight.length)}
+                  </div>
+                ))}
+              </div>
+              <span className="arch-mid" aria-hidden />
+              <div className="chart-quadrant chart-quadrant-left">
+                {arch.upperLeft.map((n, i) => (
+                  <div className="tooth-slot" key={n}>
+                    {renderArchTooth(n, "upper", i, "left", arch.upperLeft.length)}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
           <div className="dc-jaw-divider" aria-hidden />
           <div className="chart-arch lower">
             <div className="chart-row">
-              {arch.lowerRight.map((n, i) => renderArchTooth(n, "lower", i, "right", arch.lowerRight.length))}
-              <span className="arch-mid" />
-              {arch.lowerLeft.map((n, i) => renderArchTooth(n, "lower", i, "left", arch.lowerLeft.length))}
+              <div className="chart-quadrant chart-quadrant-right">
+                {arch.lowerRight.map((n, i) => (
+                  <div className="tooth-slot" key={n}>
+                    {renderArchTooth(n, "lower", i, "right", arch.lowerRight.length)}
+                  </div>
+                ))}
+              </div>
+              <span className="arch-mid" aria-hidden />
+              <div className="chart-quadrant chart-quadrant-left">
+                {arch.lowerLeft.map((n, i) => (
+                  <div className="tooth-slot" key={n}>
+                    {renderArchTooth(n, "lower", i, "left", arch.lowerLeft.length)}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
           <SurfaceLegend lang={lang} />

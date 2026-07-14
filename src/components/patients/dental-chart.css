@@ -66,15 +66,33 @@
   align-items: flex-end;
   gap: 0;
   direction: ltr;
+  width: 100%;
 }
 
 .chart-arch.lower .chart-row {
   align-items: flex-start;
 }
 
+/* Equal-width slots so 11 sits above 41, 21 above 31, etc. (FDI clinician view) */
+.chart-quadrant {
+  display: flex;
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 420px;
+}
+
+.tooth-slot {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  justify-content: center;
+  align-items: inherit;
+}
+
 .arch-mid {
-  width: 16px;
+  width: 12px;
   flex-shrink: 0;
+  align-self: stretch;
 }
 
 /* ── Dashed jaw divider ── */
@@ -171,6 +189,17 @@
   align-items: center;
   justify-content: center;
   line-height: 0;
+}
+
+/* Upper jaw: flip so crowns point toward the occlusal plane (down). */
+.tooth-asset-body {
+  position: relative;
+  display: inline-flex;
+  line-height: 0;
+}
+
+.tooth-asset-upper {
+  transform: scaleY(-1);
 }
 
 .tooth-asset-img {
