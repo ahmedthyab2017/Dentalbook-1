@@ -49,7 +49,7 @@
 
 .dc-chart-inner {
   position: relative;
-  min-width: 720px;
+  min-width: 820px;
   padding: 4px 0 8px;
 }
 
@@ -60,36 +60,38 @@
   padding: 8px 0;
 }
 
-.chart-row {
+.dental-chart-wrap .chart-row {
   display: flex;
   justify-content: center;
   align-items: flex-end;
   gap: 0;
   direction: ltr;
   width: 100%;
+  grid-template-columns: unset;
+  margin-bottom: 0;
 }
 
-.chart-arch.lower .chart-row {
+.dental-chart-wrap .chart-arch.lower .chart-row {
   align-items: flex-start;
 }
 
-/* Equal-width slots so 11 sits above 41, 21 above 31, etc. (FDI clinician view) */
-.chart-quadrant {
-  display: flex;
+/* Grid inside each quadrant — 8 equal columns (FDI clinician view) */
+.dental-chart-wrap .chart-quadrant {
+  display: grid;
+  grid-template-columns: repeat(var(--quadrant-count, 8), minmax(0, 1fr));
   flex: 1 1 0;
   min-width: 0;
-  max-width: 420px;
+  width: 100%;
 }
 
-.tooth-slot {
-  flex: 1 1 0;
-  min-width: 0;
+.dental-chart-wrap .tooth-slot {
   display: flex;
   justify-content: center;
   align-items: inherit;
+  min-width: 0;
 }
 
-.arch-mid {
+.dental-chart-wrap .arch-mid {
   width: 12px;
   flex-shrink: 0;
   align-self: stretch;
@@ -113,7 +115,8 @@
   flex-direction: column;
   align-items: center;
   gap: 2px;
-  padding: 2px 2px;
+  padding: 2px 1px;
+  max-width: 100%;
   transform: rotate(var(--arch-tilt)) translateY(var(--arch-lift));
   transition: transform 0.25s ease;
 }
@@ -137,10 +140,15 @@
 }
 
 .tooth-type-label {
-  font: 600 9px/1.1 var(--en-font, "Segoe UI", system-ui, sans-serif);
+  font: 600 8px/1.1 var(--en-font, "Segoe UI", system-ui, sans-serif);
   color: #64748b;
   text-transform: capitalize;
   letter-spacing: 0.01em;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
 }
 
 .tooth-cell-arch:has(.tooth-cell.selected) .tooth-num {
@@ -223,34 +231,34 @@
 .dental-chart-wrap .tc-lateral .tooth-asset-shell,
 .dental-chart-wrap .tc-dcCentral .tooth-asset-shell,
 .dental-chart-wrap .tc-dcLateral .tooth-asset-shell {
-  width: 34px;
+  width: min(100%, 34px);
 }
 
 .dental-chart-wrap .tc-canine .tooth-asset-shell,
 .dental-chart-wrap .tc-dcCanine .tooth-asset-shell {
-  width: 38px;
+  width: min(100%, 38px);
 }
 
 .dental-chart-wrap .tc-premolar1 .tooth-asset-shell,
 .dental-chart-wrap .tc-premolar2 .tooth-asset-shell {
-  width: 46px;
+  width: min(100%, 46px);
 }
 
 .dental-chart-wrap .tc-molar1 .tooth-asset-shell {
-  width: 58px;
+  width: min(100%, 58px);
 }
 
 .dental-chart-wrap .tc-molar2 .tooth-asset-shell {
-  width: 54px;
+  width: min(100%, 54px);
 }
 
 .dental-chart-wrap .tc-molar3 .tooth-asset-shell {
-  width: 50px;
+  width: min(100%, 50px);
 }
 
 .dental-chart-wrap .tc-dcMolar1 .tooth-asset-shell,
 .dental-chart-wrap .tc-dcMolar2 .tooth-asset-shell {
-  width: 42px;
+  width: min(100%, 42px);
 }
 
 .dental-chart-wrap .dental-chart-deciduous .tooth-asset-shell {

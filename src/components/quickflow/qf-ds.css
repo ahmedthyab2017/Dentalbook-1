@@ -210,13 +210,20 @@
   direction: ltr;
 }
 
-.qf-ds .qf-tooth-row,
-.qf-ds .chart-row {
+.qf-ds .qf-tooth-row {
   display: grid;
   grid-template-columns: repeat(8, minmax(0, 1fr));
   gap: 0.25rem;
   margin-bottom: 0.375rem;
   direction: ltr;
+}
+
+/* Shared DentalChart uses its own flex + quadrant grid — do not override .chart-row */
+.qf-ds .qf-dc-shared .chart-row {
+  display: flex;
+  grid-template-columns: unset;
+  gap: 0;
+  margin-bottom: 0;
 }
 
 .qf-ds .qf-tooth,

@@ -9,9 +9,14 @@ import { cn } from "@/lib/cn";
 
 function displayType(num: number, lang: "ar" | "en"): string {
   const t = getToothType(num);
-  if (t === "central") return lang === "ar" ? TOOTH_TYPE_LABELS.central.ar : "Incisor";
-  if (t === "lateral") return lang === "ar" ? TOOTH_TYPE_LABELS.lateral.ar : "Incisor";
-  return lang === "ar" ? TOOTH_TYPE_LABELS[t].ar : TOOTH_TYPE_LABELS[t].en;
+  if (lang === "ar") {
+    if (t === "central" || t === "lateral") return "قاطع";
+    if (t === "canine") return "ناب";
+    if (t === "premolar") return "ضاحك";
+    return "طاحن";
+  }
+  if (t === "central" || t === "lateral") return "Incisor";
+  return TOOTH_TYPE_LABELS[t].en;
 }
 
 export function ToothCell({

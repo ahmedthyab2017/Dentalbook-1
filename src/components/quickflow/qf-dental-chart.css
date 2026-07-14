@@ -4,8 +4,19 @@
   margin-bottom: 0.75rem;
 }
 
+.qf-dc-shared .chart-row {
+  display: flex;
+  grid-template-columns: unset;
+  gap: 0;
+  margin-bottom: 0;
+}
+
+.qf-dc-shared .chart-quadrant {
+  display: grid;
+}
+
 .qf-dc-shared .dental-chart {
-  min-width: 680px;
+  min-width: 820px;
 }
 
 .qf-dc-shared .dc-type-legend {
