@@ -1,4 +1,4 @@
-/* Premium anatomical dental chart — dark clinical theme */
+/* Clinical dental chart — light / white theme (reference design) */
 .dental-chart-wrap {
   direction: ltr;
 }
@@ -13,65 +13,52 @@
 .dc-dentition-btn {
   padding: 7px 18px;
   border-radius: 999px;
-  border: 1.5px solid rgba(96, 165, 250, 0.25);
-  background: rgba(15, 23, 42, 0.6);
+  border: 1.5px solid #cbd5e1;
+  background: #fff;
   font-size: 13px;
   font-weight: 700;
-  color: #94a3b8;
+  color: #64748b;
   cursor: pointer;
   transition: all 0.15s ease;
 }
 
 .dc-dentition-btn:hover {
-  border-color: rgba(96, 165, 250, 0.5);
-  color: #e2e8f0;
+  border-color: #94a3b8;
+  color: #334155;
 }
 
 .dc-dentition-btn.on {
-  background: linear-gradient(180deg, #3b82f6, #2563eb);
-  border-color: #2563eb;
+  background: linear-gradient(180deg, #1e40af, #1d4ed8);
+  border-color: #1d4ed8;
   color: #fff;
-  box-shadow: 0 4px 16px -4px rgba(37, 99, 235, 0.55);
+  box-shadow: 0 4px 14px -4px rgba(29, 78, 216, 0.45);
 }
 
 /* ── Chart panel ── */
 .dental-chart-wrap .dental-chart {
   position: relative;
-  background: radial-gradient(ellipse 120% 80% at 50% 50%, #102138 0%, #0a1220 55%, #060d18 100%);
-  border: 1px solid rgba(59, 130, 246, 0.18);
-  border-radius: 20px;
-  padding: 30px 14px 24px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 28px 16px 32px;
   overflow-x: auto;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.04),
-    0 16px 40px -12px rgba(0, 0, 0, 0.65);
+    0 1px 3px rgba(15, 23, 42, 0.04),
+    0 8px 28px -10px rgba(15, 23, 42, 0.08);
 }
 
 .dc-chart-inner {
   position: relative;
-  min-width: 700px;
-  padding: 8px 0;
+  min-width: 720px;
+  padding: 4px 0 8px;
 }
 
 /* ── Arch rows ── */
 .chart-arch {
   position: relative;
   z-index: 1;
-  padding: 6px 0;
+  padding: 8px 0;
 }
-
-.chart-arch .dc-gum-layer {
-  position: absolute;
-  left: 2%;
-  right: 2%;
-  height: 52px;
-  z-index: 0;
-  pointer-events: none;
-}
-
-.chart-arch.upper .dc-gum-layer { bottom: 18px; }
-.chart-arch.lower .dc-gum-layer { top: 18px; }
-.chart-arch .chart-row { position: relative; z-index: 1; }
 
 .chart-row {
   display: flex;
@@ -86,80 +73,29 @@
 }
 
 .arch-mid {
-  width: 14px;
+  width: 16px;
   flex-shrink: 0;
 }
 
-/* ── Jaw divider: two glowing lines + stacked labels + plus icon ── */
+/* ── Dashed jaw divider ── */
 .dc-jaw-divider {
   position: relative;
   z-index: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  margin: 6px 0 10px;
+  height: 0;
+  margin: 10px 4%;
+  border: none;
+  border-top: 2px dashed #cbd5e1;
 }
 
-.dc-jaw-line {
-  position: relative;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.dc-jaw-line::before {
-  content: "";
-  position: absolute;
-  left: 3%;
-  right: 3%;
-  top: 50%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.75) 15%, rgba(59, 130, 246, 0.75) 85%, transparent);
-  box-shadow: 0 0 6px rgba(59, 130, 246, 0.5);
-  transform: translateY(-50%);
-}
-
-.dc-jaw-line span {
-  position: relative;
-  z-index: 1;
-  background: transparent;
-  padding: 0 12px;
-  font-size: 12px;
-  font-weight: 600;
-  color: #a9c3e8;
-  letter-spacing: 0.02em;
-}
-
-.dc-jaw-plus {
-  position: relative;
-  z-index: 1;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  border: 1.5px solid rgba(59, 130, 246, 0.8);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 11px;
-  font-weight: 700;
-  color: #60a5fa;
-  background: rgba(15, 23, 42, 0.8);
-  box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
-  margin: -2px 0;
-}
-
-/* ── Tooth arch wrapper: carries the static curvature transform ── */
+/* ── Tooth arch wrapper ── */
 .tooth-cell-arch {
   --arch-tilt: 0deg;
   --arch-lift: 0px;
-  --arch-out: 0px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 3px;
-  padding: 2px 3px;
+  gap: 2px;
+  padding: 2px 2px;
   transform: rotate(var(--arch-tilt)) translateY(var(--arch-lift));
   transition: transform 0.25s ease;
 }
@@ -169,110 +105,285 @@
 }
 
 .tooth-num {
-  font: 700 10px/1 var(--en-font, "Segoe UI", system-ui, sans-serif);
-  color: rgba(148, 163, 184, 0.75);
+  font: 700 11px/1 var(--en-font, "Segoe UI", system-ui, sans-serif);
+  color: #1e3a5f;
   letter-spacing: 0.02em;
 }
 
 .tooth-num-top {
-  margin-bottom: 1px;
+  margin-bottom: 0;
 }
 
 .tooth-num-bottom {
-  margin-top: 1px;
+  margin-top: 0;
 }
 
-.tooth-cell.selected + .tooth-num,
+.tooth-type-label {
+  font: 600 9px/1.1 var(--en-font, "Segoe UI", system-ui, sans-serif);
+  color: #64748b;
+  text-transform: capitalize;
+  letter-spacing: 0.01em;
+}
+
 .tooth-cell-arch:has(.tooth-cell.selected) .tooth-num {
-  color: #60a5fa;
+  color: #1d4ed8;
   font-weight: 800;
 }
 
-/* ── Interactive tooth cell (motion.button) ── */
+/* ── Interactive tooth cell ── */
 .tooth-cell {
   appearance: none;
   background: transparent;
   border: none;
-  padding: 4px;
+  padding: 3px;
   margin: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  border-radius: 12px;
+  border-radius: 10px;
   outline: none;
   -webkit-tap-highlight-color: transparent;
-  box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+  box-shadow: 0 0 0 0 rgba(29, 78, 216, 0);
   transition: box-shadow 0.2s ease, background 0.2s ease;
 }
 
 .tooth-cell:hover {
-  background: rgba(59, 130, 246, 0.12);
-  box-shadow:
-    0 0 0 3px rgba(96, 165, 250, 0.28),
-    0 8px 18px -6px rgba(59, 130, 246, 0.55);
+  background: rgba(59, 130, 246, 0.06);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
 }
 
 .tooth-cell:focus-visible {
-  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.5);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.35);
 }
 
 .tooth-cell.selected {
-  background: rgba(59, 130, 246, 0.18);
+  background: rgba(59, 130, 246, 0.08);
   box-shadow:
-    0 0 0 2.5px #60a5fa,
-    0 0 22px 4px rgba(96, 165, 250, 0.55),
-    0 10px 20px -6px rgba(37, 99, 235, 0.6);
+    0 0 0 2px #3b82f6,
+    0 4px 16px -4px rgba(59, 130, 246, 0.35);
 }
 
-/* ── Tooth SVG graphics — width varies by anatomical type ── */
-.dc-tooth-graphic {
-  display: flex;
+/* ── Asset-based tooth SVG (img) ── */
+.tooth-asset-shell {
+  position: relative;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
+  line-height: 0;
 }
 
+.tooth-asset-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 3px 5px rgba(15, 23, 42, 0.12));
+  user-select: none;
+}
+
+.tooth-cell:hover .tooth-asset-img {
+  filter: drop-shadow(0 5px 10px rgba(15, 23, 42, 0.18));
+}
+
+.tooth-cell.selected .tooth-asset-img {
+  filter: drop-shadow(0 6px 12px rgba(59, 130, 246, 0.28));
+}
+
+/* Per-type widths — incisor / canine / premolar / molar */
+.dental-chart-wrap .tc-central .tooth-asset-shell,
+.dental-chart-wrap .tc-lateral .tooth-asset-shell,
+.dental-chart-wrap .tc-dcCentral .tooth-asset-shell,
+.dental-chart-wrap .tc-dcLateral .tooth-asset-shell {
+  width: 34px;
+}
+
+.dental-chart-wrap .tc-canine .tooth-asset-shell,
+.dental-chart-wrap .tc-dcCanine .tooth-asset-shell {
+  width: 38px;
+}
+
+.dental-chart-wrap .tc-premolar1 .tooth-asset-shell,
+.dental-chart-wrap .tc-premolar2 .tooth-asset-shell {
+  width: 46px;
+}
+
+.dental-chart-wrap .tc-molar1 .tooth-asset-shell {
+  width: 58px;
+}
+
+.dental-chart-wrap .tc-molar2 .tooth-asset-shell {
+  width: 54px;
+}
+
+.dental-chart-wrap .tc-molar3 .tooth-asset-shell {
+  width: 50px;
+}
+
+.dental-chart-wrap .tc-dcMolar1 .tooth-asset-shell,
+.dental-chart-wrap .tc-dcMolar2 .tooth-asset-shell {
+  width: 42px;
+}
+
+.dental-chart-wrap .dental-chart-deciduous .tooth-asset-shell {
+  width: 32px;
+}
+
+/* Legacy parametric SVG class alias */
 .dental-chart-wrap .tooth-svg {
   width: 46px;
   height: auto;
   display: block;
-  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.35));
 }
 
-/* incisors — narrow flat crowns */
-.dental-chart-wrap .tc-central .tooth-svg { width: 32px; }
-.dental-chart-wrap .tc-lateral .tooth-svg { width: 30px; }
-.dental-chart-wrap .tc-dcCentral .tooth-svg { width: 26px; }
-.dental-chart-wrap .tc-dcLateral .tooth-svg { width: 24px; }
-
-/* canine — tall pointed crown */
-.dental-chart-wrap .tc-canine .tooth-svg { width: 38px; }
-.dental-chart-wrap .tc-dcCanine .tooth-svg { width: 32px; }
-
-/* premolars — medium width + occlusal table */
-.dental-chart-wrap .tc-premolar1 .tooth-svg { width: 44px; }
-.dental-chart-wrap .tc-premolar2 .tooth-svg { width: 42px; }
-
-/* molars — widest crowns + multi-root */
-.dental-chart-wrap .tc-molar1 .tooth-svg { width: 56px; }
-.dental-chart-wrap .tc-molar2 .tooth-svg { width: 52px; }
-.dental-chart-wrap .tc-molar3 .tooth-svg { width: 48px; }
-.dental-chart-wrap .tc-dcMolar1 .tooth-svg,
-.dental-chart-wrap .tc-dcMolar2 .tooth-svg { width: 40px; }
-
-.dental-chart-wrap .dental-chart-deciduous .tooth-svg {
-  width: 30px;
+/* ── Status overlays on crown ── */
+.tooth-ov {
+  position: absolute;
+  pointer-events: none;
+  border-radius: 5px;
 }
 
-.tooth-cell:hover .tooth-svg {
-  filter: drop-shadow(0 6px 14px rgba(59, 130, 246, 0.5));
+.tooth-ov.decay,
+.tooth-ov.rct {
+  top: 6%;
+  left: 14%;
+  right: 14%;
+  height: 30%;
+  background: rgba(250, 204, 21, 0.78);
+  border-radius: 4px 4px 10px 10px;
 }
 
-.tooth-cell.selected .tooth-svg {
-  filter: drop-shadow(0 8px 16px rgba(96, 165, 250, 0.6));
+.tooth-ov.filling {
+  top: 10%;
+  left: 18%;
+  right: 18%;
+  height: 26%;
+  background: rgba(34, 197, 94, 0.58);
+  border-radius: 8px;
 }
 
-/* deciduous sizing overrides per-type above */
+.tooth-ov.crown-full {
+  top: 4%;
+  left: 6%;
+  right: 6%;
+  height: 40%;
+  background: rgba(168, 85, 247, 0.62);
+  border-radius: 10px 10px 6px 6px;
+}
+
+.tooth-ov.implant {
+  top: 38%;
+  left: 28%;
+  right: 28%;
+  height: 52%;
+  background: linear-gradient(180deg, rgba(148, 163, 184, 0.15), rgba(100, 116, 139, 0.35));
+  border-radius: 3px;
+}
+
+.tooth-ov.missing {
+  inset: 0;
+  background: rgba(255, 255, 255, 0.55);
+  border-radius: 8px;
+}
+
+.tooth-ov.extraction {
+  inset: 0;
+  background: rgba(248, 250, 252, 0.7);
+}
+
+.tooth-ov-x {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #dc2626;
+  pointer-events: none;
+  text-shadow: 0 1px 0 #fff;
+}
+
+/* Molars — filling/decay on occlusal (wider zone) */
+.dental-chart-wrap .tc-molar1 .tooth-ov.filling,
+.dental-chart-wrap .tc-molar2 .tooth-ov.filling,
+.dental-chart-wrap .tc-molar3 .tooth-ov.filling,
+.dental-chart-wrap .tc-dcMolar1 .tooth-ov.filling,
+.dental-chart-wrap .tc-dcMolar2 .tooth-ov.filling {
+  top: 8%;
+  left: 12%;
+  right: 12%;
+  height: 28%;
+}
+
+/* ── Surface legend (M/D/B/L/O) ── */
+.dc-surface-legend {
+  position: absolute;
+  right: 12px;
+  bottom: 8px;
+  width: 88px;
+  height: 88px;
+  pointer-events: none;
+}
+
+.dc-surf-label {
+  position: absolute;
+  font: 700 10px/1 var(--en-font, "Segoe UI", system-ui, sans-serif);
+  color: #334155;
+}
+
+.dc-surf-m { top: 0; left: 50%; transform: translateX(-50%); }
+.dc-surf-d { top: 50%; right: 0; transform: translateY(-50%); }
+.dc-surf-b { top: 50%; left: 0; transform: translateY(-50%); }
+.dc-surf-l { bottom: 0; left: 50%; transform: translateX(-50%); }
+
+.dc-surf-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 52px;
+  height: 52px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+  overflow: hidden;
+}
+
+.dc-surf-o {
+  position: absolute;
+  inset: 22%;
+  border-radius: 50%;
+  background: #fbbf24;
+  z-index: 2;
+}
+
+.dc-surf-seg {
+  position: absolute;
+  inset: 0;
+}
+
+.dc-surf-seg-m {
+  clip-path: polygon(50% 50%, 15% 0%, 85% 0%);
+  background: #22c55e;
+}
+
+.dc-surf-seg-d {
+  clip-path: polygon(50% 50%, 100% 15%, 100% 85%);
+  background: #3b82f6;
+}
+
+.dc-surf-seg-b {
+  clip-path: polygon(50% 50%, 15% 100%, 85% 100%);
+  background: #ef4444;
+}
+
+.dc-surf-seg-l {
+  clip-path: polygon(50% 50%, 0% 15%, 0% 85%);
+  background: #eab308;
+}
+
+/* deciduous compact */
 .dental-chart-deciduous .chart-row {
   gap: 1px;
 }
@@ -290,8 +401,8 @@
   margin-top: 14px;
   padding: 10px 14px;
   border-radius: 12px;
-  background: rgba(15, 23, 42, 0.5);
-  border: 1px solid rgba(59, 130, 246, 0.12);
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
 }
 
 .dc-type-item {
@@ -300,7 +411,7 @@
   gap: 6px;
   font-size: 11px;
   font-weight: 600;
-  color: #94a3b8;
+  color: #475569;
 }
 
 .dc-type-item i {
@@ -308,84 +419,133 @@
   width: 14px;
   height: 18px;
   border-radius: 3px 3px 1px 1px;
-  background: linear-gradient(180deg, #fff, #dbe2e8);
+  background: linear-gradient(180deg, #fff, #e2e8f0);
   border: 1px solid #94a3b8;
 }
 
-.dc-type-central i {
-  width: 12px;
-}
-
-.dc-type-lateral i {
-  width: 10px;
-  transform: skewX(-6deg);
-}
-
+.dc-type-central i { width: 12px; }
+.dc-type-lateral i { width: 10px; transform: skewX(-6deg); }
 .dc-type-canine i {
   width: 10px;
   clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
   border-radius: 0;
   height: 16px;
 }
+.dc-type-premolar i { width: 13px; }
+.dc-type-molar i { width: 16px; }
 
-.dc-type-premolar i {
-  width: 13px;
-}
-
-.dc-type-molar i {
-  width: 16px;
-}
-
-/* hide legacy orient labels (replaced by dc-jaw-divider) */
 .dc-orient { display: none; }
 
+/* ── Status popover (light) ── */
 .dc-popover-backdrop {
-  position: fixed; inset: 0; z-index: 90; border: none;
-  background: rgba(8, 15, 30, 0.45); cursor: default;
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  border: none;
+  background: rgba(15, 23, 42, 0.25);
+  cursor: default;
 }
+
 .dc-tooth-popover {
-  position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); z-index: 91;
-  width: min(420px, calc(100vw - 32px)); padding: 14px 16px 16px; border-radius: 16px;
-  border: 1px solid rgba(96, 165, 250, 0.35);
-  background: linear-gradient(180deg, #1a2740 0%, #0f172a 100%);
-  box-shadow: 0 20px 48px -12px rgba(0, 0, 0, 0.65);
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  z-index: 91;
+  width: min(420px, calc(100vw - 32px));
+  padding: 14px 16px 16px;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  box-shadow: 0 20px 48px -12px rgba(15, 23, 42, 0.18);
 }
-.dc-popover-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
-.dc-popover-head strong { font-size: 1rem; color: #e2e8f0; }
+
+.dc-popover-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.dc-popover-head strong {
+  font-size: 1rem;
+  color: #0f172a;
+}
+
 .dc-popover-close {
-  appearance: none; border: none; background: rgba(148, 163, 184, 0.15); color: #94a3b8;
-  width: 28px; height: 28px; border-radius: 8px; font-size: 1.1rem; cursor: pointer;
+  appearance: none;
+  border: none;
+  background: #f1f5f9;
+  color: #64748b;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  cursor: pointer;
 }
-.dc-popover-hint { margin: 0 0 12px; font-size: 0.82rem; color: #94a3b8; }
-.dc-popover-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+
+.dc-popover-hint {
+  margin: 0 0 12px;
+  font-size: 0.82rem;
+  color: #64748b;
+}
+
+.dc-popover-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
 .dc-popover-status {
-  display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 10px;
-  border: 1px solid rgba(148, 163, 184, 0.2); background: rgba(15, 23, 42, 0.6);
-  color: #cbd5e1; font-size: 0.82rem; font-weight: 600; cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  color: #334155;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
 }
-.dc-popover-status i { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-.dc-popover-status.on { border-color: #60a5fa; background: rgba(59, 130, 246, 0.2); color: #f1f5f9; }
+
+.dc-popover-status i {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dc-popover-status.on {
+  border-color: #3b82f6;
+  background: rgba(59, 130, 246, 0.08);
+  color: #1e40af;
+}
+
 .dc-popover-details {
-  display: block; width: 100%; margin-top: 12px; padding: 9px 12px;
-  border: 1px dashed rgba(96, 165, 250, 0.35); border-radius: 10px; background: transparent;
-  color: #60a5fa; font-size: 0.85rem; font-weight: 600; cursor: pointer;
+  display: block;
+  width: 100%;
+  margin-top: 12px;
+  padding: 9px 12px;
+  border: 1px dashed #cbd5e1;
+  border-radius: 10px;
+  background: transparent;
+  color: #2563eb;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
 }
 
 @media (max-width: 680px) {
-  .dental-chart-wrap .tc-central .tooth-svg { width: 26px; }
-  .dental-chart-wrap .tc-lateral .tooth-svg { width: 24px; }
-  .dental-chart-wrap .tc-dcCentral .tooth-svg { width: 22px; }
-  .dental-chart-wrap .tc-dcLateral .tooth-svg { width: 20px; }
-  .dental-chart-wrap .tc-canine .tooth-svg { width: 30px; }
-  .dental-chart-wrap .tc-dcCanine .tooth-svg { width: 26px; }
-  .dental-chart-wrap .tc-premolar1 .tooth-svg { width: 34px; }
-  .dental-chart-wrap .tc-premolar2 .tooth-svg { width: 32px; }
-  .dental-chart-wrap .tc-molar1 .tooth-svg { width: 42px; }
-  .dental-chart-wrap .tc-molar2 .tooth-svg { width: 40px; }
-  .dental-chart-wrap .tc-molar3 .tooth-svg { width: 36px; }
-  .dental-chart-wrap .tc-dcMolar1 .tooth-svg,
-  .dental-chart-wrap .tc-dcMolar2 .tooth-svg { width: 32px; }
-  .dc-chart-inner {
-    min-width: 600px;
-  }
+  .dental-chart-wrap .tc-central .tooth-asset-shell,
+  .dental-chart-wrap .tc-lateral .tooth-asset-shell { width: 28px; }
+  .dental-chart-wrap .tc-canine .tooth-asset-shell { width: 32px; }
+  .dental-chart-wrap .tc-premolar1 .tooth-asset-shell,
+  .dental-chart-wrap .tc-premolar2 .tooth-asset-shell { width: 38px; }
+  .dental-chart-wrap .tc-molar1 .tooth-asset-shell { width: 46px; }
+  .dental-chart-wrap .tc-molar2 .tooth-asset-shell { width: 42px; }
+  .dental-chart-wrap .tc-molar3 .tooth-asset-shell { width: 38px; }
+  .dc-chart-inner { min-width: 580px; }
+  .dc-surface-legend { transform: scale(0.85); transform-origin: bottom right; }
 }

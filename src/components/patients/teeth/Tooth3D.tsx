@@ -1,7 +1,7 @@
 "use client";
 
-import { Tooth as AnatomicalTooth } from "../dental-chart/Tooth";
-import { getMorphType } from "../dental-chart/toothPaths";
+import { ToothAssetSvg } from "../dental-chart/ToothAssetSvg";
+import { getToothJaw } from "@/lib/tooth";
 import { cn } from "@/lib/cn";
 import type { ToothState } from "@/types/db";
 
@@ -31,6 +31,6 @@ export function getToothStatusStyle(state: ToothState): ToothStatusStyle {
   }
 }
 
-export function Tooth3D({ num, state = "healthy", className, showShadow = true }: { num: number; state?: ToothState; className?: string; showShadow?: boolean }) {
-  return <AnatomicalTooth type={getMorphType(num)} status={state} num={num} className={cn(className)} showShadow={showShadow} />;
+export function Tooth3D({ num, state = "healthy", className }: { num: number; state?: ToothState; className?: string; showShadow?: boolean }) {
+  return <ToothAssetSvg num={num} status={state} jaw={getToothJaw(num)} className={cn(className)} />;
 }

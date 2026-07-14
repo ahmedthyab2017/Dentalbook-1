@@ -1,9 +1,8 @@
 "use client";
 
 import { useState, type CSSProperties, type ReactNode } from "react";
-import { GumLayer, ToothStatusPopover, buildArchLayout } from "./dental-chart";
+import { ToothStatusPopover, buildArchLayout, SurfaceLegend } from "./dental-chart";
 import { ToothCell } from "./teeth/ToothCell";
-import { ToothDefs } from "./teeth/ToothDefs";
 import { DENTITION_LABELS, TOOTH_TYPE_LABELS, getArchTeeth, type Dentition } from "@/lib/tooth";
 import type { ToothState } from "@/types/db";
 
@@ -45,10 +44,10 @@ export function archStyle(idx: number, count: number, side: "right" | "left", ja
   return { "--arch-tilt": `${sign * angleDeg * 0.62}deg`, "--arch-lift": `${lift}px` } as CSSProperties;
 }
 
-function defaultRenderTooth(props: DentalChartRenderProps & { onToothClick?: (n: number) => void }) {
-  const { num, jaw, state, selected, onToothClick, archIdx, archSide, archCount } = props;
+function defaultRenderTooth(props: DentalChartRenderProps & { onToothClick?: (n: number) => void; lang: "ar" | "en" }) {
+  const { num, jaw, state, selected, onToothClick, archIdx, archSide, archCount, lang } = props;
   return (
-    <ToothCell key={num} num={num} jaw={jaw} state={state} selected={selected} archStyle={archStyle(archIdx, archCount, archSide, jaw)} onClick={() => onToothClick?.(num)} />
+    <ToothCell key={num} num={num} jaw={jaw} state={state} selected={selected} lang={lang} archStyle={archStyle(archIdx, archCount, archSide, jaw)} onClick={() => onToothClick?.(num)} />
   );
 }
 
@@ -80,12 +79,11 @@ export function DentalChart({
     const state = ((chart[key] as ToothState | undefined) || "healthy") as ToothState;
     const isSel = selectedList ? selectedList.includes(key) : selected === n;
     const props: DentalChartRenderProps = { num: n, jaw, state, selected: isSel, dentition, archIdx, archSide, archCount };
-    return renderTooth ? renderTooth(props) : defaultRenderTooth({ ...props, onToothClick: handleToothClick });
+    return renderTooth ? renderTooth(props) : defaultRenderTooth({ ...props, onToothClick: handleToothClick, lang });
   }
 
   return (
-    <div className={`dental-chart-wrap ${className}`.trim()}>
-      <ToothDefs />
+    <div className={`dental-chart-wrap dental-chart-light ${className}`.trim()}>
       {showDentitionToggle && (
         <div className="dc-dentition-bar">
           {(["permanent", "deciduous"] as Dentition[]).map((d) => (
@@ -98,26 +96,21 @@ export function DentalChart({
       <div className={`dental-chart${isDeciduous ? " dental-chart-deciduous" : ""}`}>
         <div className="dc-chart-inner">
           <div className="chart-arch upper">
-            <GumLayer jaw="upper" />
             <div className="chart-row">
               {arch.upperRight.map((n, i) => renderArchTooth(n, "upper", i, "right", arch.upperRight.length))}
               <span className="arch-mid" />
               {arch.upperLeft.map((n, i) => renderArchTooth(n, "upper", i, "left", arch.upperLeft.length))}
             </div>
           </div>
-          <div className="dc-jaw-divider">
-            <div className="dc-jaw-line"><span>{lang === "ar" ? "الفك العلوي" : "Upper Jaw"}</span></div>
-            <span className="dc-jaw-plus" aria-hidden>+</span>
-            <div className="dc-jaw-line"><span>{lang === "ar" ? "الفك السفلي" : "Lower Jaw"}</span></div>
-          </div>
+          <div className="dc-jaw-divider" aria-hidden />
           <div className="chart-arch lower">
-            <GumLayer jaw="lower" />
             <div className="chart-row">
               {arch.lowerRight.map((n, i) => renderArchTooth(n, "lower", i, "right", arch.lowerRight.length))}
               <span className="arch-mid" />
               {arch.lowerLeft.map((n, i) => renderArchTooth(n, "lower", i, "left", arch.lowerLeft.length))}
             </div>
           </div>
+          <SurfaceLegend lang={lang} />
         </div>
       </div>
       <div className="dc-type-legend">
