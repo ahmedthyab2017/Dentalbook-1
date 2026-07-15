@@ -58,7 +58,7 @@ export function ToothSchematic({
         role="img"
         aria-hidden
       >
-        <g transform={`translate(${(vbW - (shape.morph === "molar" ? 36 : shape.morph === "premolar" ? 28 : shape.morph === "canine" ? 24 : 22)) / 2}, 0)`}>
+        <g transform={`translate(${(vbW - (shape.morph === "molar" ? 36 : shape.morph === "premolar" ? 28 : shape.morph === "canine" ? 24 : 26)) / 2}, 0)`}>
           <path d={shape.rootFill} fill={ROOT_FILL} stroke="none" />
           {shape.roots.map((d, i) => (
             <path key={i} d={d} fill="none" stroke={STROKE} strokeWidth={1.35} strokeLinecap="round" />

@@ -70,7 +70,8 @@ export function DentalChart({
   buildArchLayout(dentition);
   const isDeciduous = dentition === "deciduous";
   const activePopover = showStatusPopover ? (popoverNum ?? selected) : null;
-  /** Patient-facing row order: left quadrant mesial→distal, right quadrant distal→mesial (41→48). */
+  /** Patient view: mesial→distal from midline on each side (11–18, 41–48). */
+  const upperRightDisplay = [...arch.upperRight].reverse();
   const lowerRightDisplay = [...arch.lowerRight].reverse();
 
   function setDentition(d: Dentition) {
@@ -105,6 +106,7 @@ export function DentalChart({
       <div className={`dental-chart${isDeciduous ? " dental-chart-deciduous" : ""}`}>
         <div className="dc-chart-inner">
           <div className="chart-arch upper">
+            <p className="dc-arch-label">{lang === "ar" ? "الفك العلوي" : "Upper Jaw"}</p>
             <div className="chart-row">
               <div className="chart-quadrant chart-quadrant-patient-left" style={quadrantStyle(arch.upperLeft.length)}>
                 {arch.upperLeft.map((n, i) => (
@@ -114,10 +116,10 @@ export function DentalChart({
                 ))}
               </div>
               <span className="arch-mid" aria-hidden />
-              <div className="chart-quadrant chart-quadrant-patient-right" style={quadrantStyle(arch.upperRight.length)}>
-                {arch.upperRight.map((n, i) => (
+              <div className="chart-quadrant chart-quadrant-patient-right" style={quadrantStyle(upperRightDisplay.length)}>
+                {upperRightDisplay.map((n, i) => (
                   <div className="tooth-slot" key={n}>
-                    {renderArchTooth(n, "upper", i, "right", arch.upperRight.length)}
+                    {renderArchTooth(n, "upper", i, "right", upperRightDisplay.length)}
                   </div>
                 ))}
               </div>
@@ -142,6 +144,7 @@ export function DentalChart({
                 ))}
               </div>
             </div>
+            <p className="dc-arch-label">{lang === "ar" ? "الفك السفلي" : "Lower Jaw"}</p>
           </div>
         </div>
       </div>

@@ -45,6 +45,7 @@ export function QfDentalChart({
 
   return (
     <div className="qf-dental-chart">
+      <p className="qf-dc-scroll-hint">{lang === "ar" ? "← مرّر لعرض جميع الأسنان →" : "← Scroll to see all teeth →"}</p>
       <DentalChart
         className="qf-dc-shared"
         lang={lang}

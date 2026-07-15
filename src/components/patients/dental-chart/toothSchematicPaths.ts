@@ -28,11 +28,11 @@ export function getSchematicShape(num: number): SchematicShape {
     case "incisor":
       return {
         morph,
-        width: 22,
+        width: 26,
         height: 48,
-        crown: "M 8 24 L 8 9 Q 11 5 14 9 L 14 24 Z",
-        rootFill: "M 9 24 L 13 24 L 13 44 L 9 44 Z",
-        roots: ["M 11 24 L 11 44"],
+        crown: "M 6 24 L 6 9 Q 13 5 20 9 L 20 24 Z",
+        rootFill: "M 7 24 L 19 24 L 19 44 L 7 44 Z",
+        roots: ["M 13 24 L 13 44"],
       };
     case "canine":
       return {

@@ -107,6 +107,22 @@
   border-top: 2px dashed #cbd5e1;
 }
 
+.dc-arch-label {
+  margin: 0;
+  text-align: center;
+  font: 600 11px/1 var(--en-font, "Segoe UI", system-ui, sans-serif);
+  color: #64748b;
+  letter-spacing: 0.02em;
+}
+
+.chart-arch.upper .dc-arch-label {
+  margin-bottom: 8px;
+}
+
+.chart-arch.lower .dc-arch-label {
+  margin-top: 8px;
+}
+
 /* ── Tooth arch wrapper ── */
 .tooth-cell-arch {
   --arch-tilt: 0deg;
