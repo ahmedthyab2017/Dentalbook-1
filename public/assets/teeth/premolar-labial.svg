@@ -3,6 +3,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" id="premolar_x5F_tooth" version="1.1" viewBox="0 0 34 64.1">
   <style>
     [data-active="0"] { display: none; }
+    #base { display: none; }
   </style>
   <defs>
     <linearGradient id="linear-gradient-14-0" x1="-2102.7" y1="-10009.6" x2="-2099.4" y2="-10009.6" gradientTransform="translate(-538.1313 -10190.9345) rotate(-15) scale(1 -1)" gradientUnits="userSpaceOnUse" data-active="1">

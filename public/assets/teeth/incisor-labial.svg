@@ -3,6 +3,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" id="incisor_x5F_tooth" version="1.1" viewBox="0 0 39.2 62.7">
   <style>
     [data-active="0"] { display: none; }
+    #base { display: none; }
   </style>
   <defs>
     <linearGradient id="linear-gradient-11-0" x1="18.7" y1="5079.7" x2="22" y2="5079.7" gradientTransform="translate(0 -5060.6929)" gradientUnits="userSpaceOnUse" data-active="1">

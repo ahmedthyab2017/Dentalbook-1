@@ -3,6 +3,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" id="molar_x5F_tooth" version="1.1" viewBox="0 0 41.8 63">
   <style>
     [data-active="0"] { display: none; }
+    #base { display: none; }
   </style>
   <defs>
     <linearGradient id="linear-gradient-16-0" x1="-2243.5" y1="10262.9" x2="-2239.4" y2="10262.9" gradientTransform="translate(-429.5341 -10472.8429) rotate(-14.8)" gradientUnits="userSpaceOnUse" data-active="1">

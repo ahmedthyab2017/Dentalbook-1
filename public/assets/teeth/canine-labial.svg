@@ -3,6 +3,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" id="canine_x5F_tooth" version="1.1" viewBox="0 0 39.1 64.9">
   <style>
     [data-active="0"] { display: none; }
+    #base { display: none; }
   </style>
   <defs>
     <linearGradient id="linear-gradient-13-0" x1="-1451.1" y1="-7070.2" x2="-1447.8" y2="-7070.2" gradientTransform="translate(-409.5494 -7184.2125) rotate(-15) scale(1 -1)" gradientUnits="userSpaceOnUse" data-active="1">
