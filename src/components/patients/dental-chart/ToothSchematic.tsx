@@ -29,6 +29,9 @@ function statusFill(state: ToothState): string | null {
   }
 }
 
+/* Upper tip / lower root padding so SVG strokes are not clipped. */
+const VB_PAD = 3;
+
 export function ToothSchematic({
   num,
   status,
@@ -49,16 +52,18 @@ export function ToothSchematic({
     <span className={cn("tooth-schematic-shell", className)}>
       <svg
         className={cn("tooth-schematic-svg", upper && "tooth-schematic-upper")}
-        viewBox={`0 0 ${vbW} ${shape.height}`}
+        viewBox={`${-VB_PAD} ${-VB_PAD} ${vbW + VB_PAD * 2} ${shape.height + VB_PAD * 2}`}
+        preserveAspectRatio="xMidYMid meet"
+        overflow="visible"
         role="img"
         aria-hidden
       >
         <g transform={`translate(${(vbW - (shape.morph === "molar" ? 36 : shape.morph === "premolar" ? 28 : shape.morph === "canine" ? 24 : 22)) / 2}, 0)`}>
           <path d={shape.rootFill} fill={ROOT_FILL} stroke="none" />
           {shape.roots.map((d, i) => (
-            <path key={i} d={d} fill="none" stroke={STROKE} strokeWidth={1.1} strokeLinecap="round" />
+            <path key={i} d={d} fill="none" stroke={STROKE} strokeWidth={1.35} strokeLinecap="round" />
           ))}
-          <path d={shape.crown} fill={CROWN} stroke={STROKE} strokeWidth={1.2} strokeLinejoin="round" />
+          <path d={shape.crown} fill={CROWN} stroke={STROKE} strokeWidth={1.4} strokeLinejoin="round" />
           {tint && <path d={shape.crown} fill={tint} stroke="none" pointerEvents="none" />}
           {status === "missing" && (
             <path d={shape.crown} fill="none" stroke={STROKE} strokeWidth={1} strokeDasharray="3 2" pointerEvents="none" />

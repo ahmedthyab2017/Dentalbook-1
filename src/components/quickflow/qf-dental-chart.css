@@ -1,4 +1,4 @@
-/* Anatomical dental chart — QuickFlow (light clinical theme, shares .dental-chart styles) */
+/* QuickFlow dental chart — larger schematic teeth, full arch visible */
 .qf-dental-chart {
   direction: ltr;
   margin-bottom: 0.75rem;
@@ -13,10 +13,17 @@
 
 .qf-dc-shared .chart-quadrant {
   display: grid;
+  gap: 1px;
 }
 
 .qf-dc-shared .dental-chart {
-  min-width: 820px;
+  min-width: 920px;
+  padding: 1.25rem 1rem 1.5rem;
+  overflow-x: auto;
+}
+
+.qf-dc-shared .dc-chart-inner {
+  min-width: 880px;
 }
 
 .qf-dc-shared .dc-type-legend {
@@ -32,15 +39,26 @@
   width: 100%;
 }
 
+.qf-dc-shared .chart-arch.upper {
+  padding: 6px 0 10px;
+}
+
+.qf-dc-shared .chart-arch.lower {
+  padding: 10px 0 6px;
+}
+
 .qf-tooth-wrap {
   width: 100%;
-  padding: 0.1875rem;
+  padding: 2px 1px;
+  overflow: visible;
 }
 
 .qf-tooth-cell {
-  min-width: 2.5rem;
-  min-height: 2.75rem;
-  border-radius: 12px;
+  min-width: 0;
+  min-height: 0;
+  padding: 4px 2px;
+  border-radius: 10px;
+  overflow: visible;
 }
 
 .qf-tooth-cell:hover {
@@ -51,14 +69,56 @@
   background: color-mix(in srgb, #60a5fa 16%, transparent);
 }
 
-/* Anatomical teeth sizing override for QuickFlow (slightly larger) */
-.qf-dental-chart .tooth-svg {
-  width: 2.5rem;
-  height: auto;
+/* Larger schematic teeth in QuickFlow */
+.qf-dc-shared .tooth-schematic-shell {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  overflow: visible;
+}
+
+.qf-dc-shared .tooth-schematic-svg {
+  display: block;
+  width: auto;
+  height: 52px;
+  max-width: none;
+  overflow: visible;
+}
+
+.qf-dc-shared .tc-central .tooth-schematic-svg,
+.qf-dc-shared .tc-lateral .tooth-schematic-svg,
+.qf-dc-shared .tc-dcCentral .tooth-schematic-svg,
+.qf-dc-shared .tc-dcLateral .tooth-schematic-svg {
+  height: 48px;
+}
+
+.qf-dc-shared .tc-canine .tooth-schematic-svg,
+.qf-dc-shared .tc-dcCanine .tooth-schematic-svg {
+  height: 54px;
+}
+
+.qf-dc-shared .tc-premolar1 .tooth-schematic-svg,
+.qf-dc-shared .tc-premolar2 .tooth-schematic-svg {
+  height: 56px;
+}
+
+.qf-dc-shared .tc-molar1 .tooth-schematic-svg,
+.qf-dc-shared .tc-molar2 .tooth-schematic-svg,
+.qf-dc-shared .tc-molar3 .tooth-schematic-svg,
+.qf-dc-shared .tc-dcMolar1 .tooth-schematic-svg,
+.qf-dc-shared .tc-dcMolar2 .tooth-schematic-svg {
+  height: 60px;
+}
+
+.qf-dc-shared .tooth-slot {
+  min-width: 38px;
 }
 
 .qf-tooth-wrap .tooth-num {
-  color: #94a3b8;
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
 }
 
 .qf-tooth-wrap:has(.qf-tooth-cell.selected) .tooth-num {
@@ -147,18 +207,24 @@
 
 @media (max-width: 640px) {
   .qf-dc-shared .dental-chart {
-    min-width: 560px;
+    min-width: 720px;
   }
 
-  .qf-tooth-wrap {
-    min-width: 2.75rem;
+  .qf-dc-shared .dc-chart-inner {
+    min-width: 680px;
   }
 
-  .qf-dental-chart .tooth-svg {
-    width: 2.25rem;
+  .qf-dc-shared .tooth-schematic-svg {
+    height: 44px;
+  }
+
+  .qf-dc-shared .tc-molar1 .tooth-schematic-svg,
+  .qf-dc-shared .tc-molar2 .tooth-schematic-svg,
+  .qf-dc-shared .tc-molar3 .tooth-schematic-svg {
+    height: 50px;
   }
 
   .qf-tooth-wrap .tooth-num {
-    font-size: 0.625rem;
+    font-size: 11px;
   }
 }
