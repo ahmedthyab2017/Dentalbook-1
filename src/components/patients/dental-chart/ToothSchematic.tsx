@@ -2,13 +2,13 @@
 
 import { cn } from "@/lib/cn";
 import type { ToothState } from "@/types/db";
-import { getSchematicShape } from "./toothSchematicPaths";
+import { getToothIconShape, iconBounds, leafPath, flowerPath } from "./toothSchematicPaths";
 
 const STROKE = "#94a3b8";
-const CROWN = "#ffffff";
-const ROOT_FILL = "rgba(148, 163, 184, 0.38)";
+const CROWN_FILL = "#ffffff";
+const VIEW_PAD = 3;
 
-function statusFill(state: ToothState): string | null {
+function statusTint(state: ToothState): string | null {
   switch (state) {
     case "decay":
       return "rgba(239, 68, 68, 0.35)";
@@ -21,63 +21,65 @@ function statusFill(state: ToothState): string | null {
     case "implant":
       return "rgba(168, 85, 247, 0.35)";
     case "missing":
-      return "rgba(148, 163, 184, 0.25)";
+      return "rgba(148, 163, 184, 0.2)";
     case "extraction":
-      return "rgba(127, 29, 29, 0.2)";
+      return "rgba(127, 29, 29, 0.18)";
     default:
       return null;
   }
 }
 
-/* Upper tip / lower root padding so SVG strokes are not clipped. */
-const VB_PAD = 3;
-
 export function ToothSchematic({
   num,
   status,
-  jaw,
   className,
 }: {
   num: number;
   status: ToothState;
-  jaw: "upper" | "lower";
+  /** Kept for API compatibility with callers; icons no longer flip per jaw. */
+  jaw?: "upper" | "lower";
   className?: string;
 }) {
-  const shape = getSchematicShape(num);
-  const tint = statusFill(status);
-  const upper = jaw === "upper";
-  const vbW = shape.morph === "molar" ? 40 : shape.morph === "premolar" ? 36 : 32;
+  const shape = getToothIconShape(num);
+  const { w, h } = iconBounds(shape);
+  const tint = statusTint(status);
+  const dashed = status === "missing" ? "3 2.5" : undefined;
 
   return (
     <span className={cn("tooth-schematic-shell", className)}>
       <svg
-        className={cn("tooth-schematic-svg", upper && "tooth-schematic-upper")}
-        viewBox={`${-VB_PAD} ${-VB_PAD} ${vbW + VB_PAD * 2} ${shape.height + VB_PAD * 2}`}
-        preserveAspectRatio="xMidYMid meet"
-        overflow="visible"
+        className="tooth-schematic-svg"
+        viewBox={`${-VIEW_PAD} ${-VIEW_PAD} ${w + VIEW_PAD * 2} ${h + VIEW_PAD * 2}`}
         role="img"
         aria-hidden
       >
-        <g transform={`translate(${(vbW - (shape.morph === "molar" ? 36 : shape.morph === "premolar" ? 28 : shape.morph === "canine" ? 24 : 26)) / 2}, 0)`}>
-          <path d={shape.rootFill} fill={ROOT_FILL} stroke="none" />
-          {shape.roots.map((d, i) => (
-            <path key={i} d={d} fill="none" stroke={STROKE} strokeWidth={1.35} strokeLinecap="round" />
-          ))}
-          <path d={shape.crown} fill={CROWN} stroke={STROKE} strokeWidth={1.4} strokeLinejoin="round" />
-          {tint && <path d={shape.crown} fill={tint} stroke="none" pointerEvents="none" />}
-          {status === "missing" && (
-            <path d={shape.crown} fill="none" stroke={STROKE} strokeWidth={1} strokeDasharray="3 2" pointerEvents="none" />
-          )}
-          {status === "extraction" && (
-            <path
-              d="M 8 10 L 28 22 M 28 10 L 8 22"
-              stroke="#dc2626"
-              strokeWidth={1.8}
-              strokeLinecap="round"
-              pointerEvents="none"
-            />
-          )}
-        </g>
+        {shape.kind === "capsule" && (
+          <>
+            <rect x={0} y={0} width={shape.w} height={shape.h} rx={shape.w / 2} ry={shape.w / 2} fill={CROWN_FILL} stroke={STROKE} strokeWidth={1.5} strokeDasharray={dashed} />
+            {tint && <rect x={0} y={0} width={shape.w} height={shape.h} rx={shape.w / 2} ry={shape.w / 2} fill={tint} stroke="none" pointerEvents="none" />}
+          </>
+        )}
+        {shape.kind === "leaf" && (
+          <>
+            <path d={leafPath(shape.w, shape.h)} fill={CROWN_FILL} stroke={STROKE} strokeWidth={1.5} strokeLinejoin="round" strokeDasharray={dashed} />
+            {tint && <path d={leafPath(shape.w, shape.h)} fill={tint} stroke="none" pointerEvents="none" />}
+          </>
+        )}
+        {shape.kind === "flower" && (
+          <>
+            <path d={flowerPath(shape.size)} fill={CROWN_FILL} stroke={STROKE} strokeWidth={1.5} strokeLinejoin="round" strokeDasharray={dashed} />
+            {tint && <path d={flowerPath(shape.size)} fill={tint} stroke="none" pointerEvents="none" />}
+          </>
+        )}
+        {status === "extraction" && (
+          <path
+            d={`M ${w * 0.22} ${h * 0.22} L ${w * 0.78} ${h * 0.78} M ${w * 0.78} ${h * 0.22} L ${w * 0.22} ${h * 0.78}`}
+            stroke="#dc2626"
+            strokeWidth={1.8}
+            strokeLinecap="round"
+            pointerEvents="none"
+          />
+        )}
       </svg>
     </span>
   );

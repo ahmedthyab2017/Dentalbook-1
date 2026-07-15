@@ -1,8 +1,9 @@
-/* Clinical dental chart — light / white theme (reference design) */
+/* Clinical dental chart — light / white theme, FDI reference layout */
 .dental-chart-wrap {
   direction: ltr;
 }
 
+/* ── Dentition toggle ── */
 .dc-dentition-bar {
   display: flex;
   justify-content: center;
@@ -40,131 +41,76 @@
   background: #ffffff;
   border: 1px solid #e2e8f0;
   border-radius: 18px;
-  padding: 28px 16px 32px;
-  overflow-x: auto;
+  padding: 24px 16px 28px;
   box-shadow:
     0 1px 3px rgba(15, 23, 42, 0.04),
     0 8px 28px -10px rgba(15, 23, 42, 0.08);
 }
 
 .dc-chart-inner {
-  position: relative;
-  min-width: 820px;
-  padding: 4px 0 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 /* ── Arch rows ── */
 .chart-arch {
-  position: relative;
-  z-index: 1;
-  padding: 8px 0;
+  padding: 6px 0;
 }
 
 .dental-chart-wrap .chart-row {
   display: flex;
-  justify-content: center;
-  align-items: flex-end;
+  align-items: stretch;
   gap: 0;
   direction: ltr;
   width: 100%;
-  grid-template-columns: unset;
-  margin-bottom: 0;
 }
 
-.dental-chart-wrap .chart-arch.lower .chart-row {
-  align-items: flex-start;
-}
-
-/* Grid inside each quadrant — 8 equal columns (FDI clinician view) */
+/* Each quadrant distributes its teeth evenly, regardless of tooth count
+   (8 for permanent, 5 for deciduous) — no JS-computed column count needed. */
 .dental-chart-wrap .chart-quadrant {
-  display: grid;
-  grid-template-columns: repeat(var(--quadrant-count, 8), minmax(0, 1fr));
+  display: flex;
   flex: 1 1 0;
   min-width: 0;
-  width: 100%;
 }
 
 .dental-chart-wrap .tooth-slot {
+  flex: 1 1 0;
+  min-width: 0;
   display: flex;
   justify-content: center;
-  align-items: inherit;
-  min-width: 0;
 }
 
 .dental-chart-wrap .arch-mid {
-  width: 12px;
+  width: 2px;
   flex-shrink: 0;
   align-self: stretch;
+  margin: 0 8px;
+  background: #cbd5e1;
 }
 
 /* ── Dashed jaw divider ── */
 .dc-jaw-divider {
-  position: relative;
-  z-index: 2;
   height: 0;
-  margin: 10px 4%;
+  margin: 8px 3%;
   border: none;
   border-top: 2px dashed #cbd5e1;
 }
 
-.dc-arch-label {
-  margin: 0;
-  text-align: center;
-  font: 600 11px/1 var(--en-font, "Segoe UI", system-ui, sans-serif);
-  color: #64748b;
-  letter-spacing: 0.02em;
-}
-
-.chart-arch.upper .dc-arch-label {
-  margin-bottom: 8px;
-}
-
-.chart-arch.lower .dc-arch-label {
-  margin-top: 8px;
-}
-
 /* ── Tooth arch wrapper ── */
 .tooth-cell-arch {
-  --arch-tilt: 0deg;
-  --arch-lift: 0px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px;
-  padding: 2px 1px;
-  max-width: 100%;
-  transform: rotate(var(--arch-tilt)) translateY(var(--arch-lift));
-  transition: transform 0.25s ease;
-}
-
-.chart-arch.lower .tooth-cell-arch {
-  transform: rotate(var(--arch-tilt)) translateY(calc(var(--arch-lift) * -1));
+  gap: 4px;
+  width: 100%;
+  padding: 0 2px;
 }
 
 .tooth-num {
-  font: 700 11px/1 var(--en-font, "Segoe UI", system-ui, sans-serif);
-  color: #1e3a5f;
+  font: 700 12px/1 var(--en-font, "Segoe UI", system-ui, sans-serif);
+  color: #1e293b;
   letter-spacing: 0.02em;
-}
-
-.tooth-num-top {
-  margin-bottom: 0;
-}
-
-.tooth-num-bottom {
-  margin-top: 0;
-}
-
-.tooth-type-label {
-  font: 600 8px/1.1 var(--en-font, "Segoe UI", system-ui, sans-serif);
-  color: #64748b;
-  text-transform: capitalize;
-  letter-spacing: 0.01em;
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  text-align: center;
 }
 
 .tooth-cell-arch:has(.tooth-cell.selected) .tooth-num {
@@ -177,8 +123,9 @@
   appearance: none;
   background: transparent;
   border: none;
-  padding: 3px;
+  padding: 4px;
   margin: 0;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -186,13 +133,11 @@
   border-radius: 10px;
   outline: none;
   -webkit-tap-highlight-color: transparent;
-  box-shadow: 0 0 0 0 rgba(29, 78, 216, 0);
   transition: box-shadow 0.2s ease, background 0.2s ease;
 }
 
 .tooth-cell:hover {
-  background: rgba(59, 130, 246, 0.06);
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+  background: rgba(148, 163, 184, 0.12);
 }
 
 .tooth-cell:focus-visible {
@@ -200,294 +145,36 @@
 }
 
 .tooth-cell.selected {
-  background: rgba(59, 130, 246, 0.08);
-  box-shadow:
-    0 0 0 2px #3b82f6,
-    0 4px 16px -4px rgba(59, 130, 246, 0.35);
+  background: rgba(59, 130, 246, 0.1);
+  box-shadow: 0 0 0 2px #3b82f6;
 }
 
-/* ── Asset-based tooth SVG (img) ── */
-.tooth-asset-shell {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 0;
-}
-
-/* Upper jaw: flip so crowns point toward the occlusal plane (down). */
-.tooth-asset-body {
-  position: relative;
-  display: inline-flex;
-  line-height: 0;
-}
-
-.tooth-asset-upper {
-  transform: scaleY(-1);
-}
-
-.tooth-asset-img {
-  display: block;
+/* ── Tooth crown icon (SVG) ── */
+.tooth-schematic-shell {
+  display: flex;
   width: 100%;
-  height: auto;
-  filter: drop-shadow(0 3px 5px rgba(15, 23, 42, 0.12));
-  user-select: none;
+  justify-content: center;
+  line-height: 0;
 }
 
-.tooth-cell:hover .tooth-asset-img {
-  filter: drop-shadow(0 5px 10px rgba(15, 23, 42, 0.18));
-}
-
-.tooth-cell.selected .tooth-asset-img {
-  filter: drop-shadow(0 6px 12px rgba(59, 130, 246, 0.28));
-}
-
-/* Per-type widths — incisor / canine / premolar / molar */
-.dental-chart-wrap .tc-central .tooth-asset-shell,
-.dental-chart-wrap .tc-lateral .tooth-asset-shell,
-.dental-chart-wrap .tc-dcCentral .tooth-asset-shell,
-.dental-chart-wrap .tc-dcLateral .tooth-asset-shell {
-  width: min(100%, 34px);
-}
-
-.dental-chart-wrap .tc-canine .tooth-asset-shell,
-.dental-chart-wrap .tc-dcCanine .tooth-asset-shell {
-  width: min(100%, 38px);
-}
-
-.dental-chart-wrap .tc-premolar1 .tooth-asset-shell,
-.dental-chart-wrap .tc-premolar2 .tooth-asset-shell {
-  width: min(100%, 46px);
-}
-
-.dental-chart-wrap .tc-molar1 .tooth-asset-shell {
-  width: min(100%, 58px);
-}
-
-.dental-chart-wrap .tc-molar2 .tooth-asset-shell {
-  width: min(100%, 54px);
-}
-
-.dental-chart-wrap .tc-molar3 .tooth-asset-shell {
-  width: min(100%, 50px);
-}
-
-.dental-chart-wrap .tc-dcMolar1 .tooth-asset-shell,
-.dental-chart-wrap .tc-dcMolar2 .tooth-asset-shell {
-  width: min(100%, 42px);
-}
-
-.dental-chart-wrap .dental-chart-deciduous .tooth-asset-shell {
-  width: 32px;
-}
-
-/* Legacy parametric SVG class alias */
-.dental-chart-wrap .tooth-svg {
-  width: 46px;
-  height: auto;
+.tooth-schematic-svg {
   display: block;
+  width: 68%;
+  max-width: 40px;
+  height: auto;
 }
 
-/* ── Status overlays on crown ── */
-.tooth-ov {
-  position: absolute;
-  pointer-events: none;
-  border-radius: 5px;
+@media (max-width: 680px) {
+  .dental-chart-wrap .dental-chart {
+    padding: 18px 10px 22px;
+  }
+  .tooth-schematic-svg {
+    max-width: 32px;
+  }
+  .tooth-num {
+    font-size: 11px;
+  }
 }
-
-.tooth-ov.decay,
-.tooth-ov.rct {
-  top: 6%;
-  left: 14%;
-  right: 14%;
-  height: 30%;
-  background: rgba(250, 204, 21, 0.78);
-  border-radius: 4px 4px 10px 10px;
-}
-
-.tooth-ov.filling {
-  top: 10%;
-  left: 18%;
-  right: 18%;
-  height: 26%;
-  background: rgba(34, 197, 94, 0.58);
-  border-radius: 8px;
-}
-
-.tooth-ov.crown-full {
-  top: 4%;
-  left: 6%;
-  right: 6%;
-  height: 40%;
-  background: rgba(168, 85, 247, 0.62);
-  border-radius: 10px 10px 6px 6px;
-}
-
-.tooth-ov.implant {
-  top: 38%;
-  left: 28%;
-  right: 28%;
-  height: 52%;
-  background: linear-gradient(180deg, rgba(148, 163, 184, 0.15), rgba(100, 116, 139, 0.35));
-  border-radius: 3px;
-}
-
-.tooth-ov.missing {
-  inset: 0;
-  background: rgba(255, 255, 255, 0.55);
-  border-radius: 8px;
-}
-
-.tooth-ov.extraction {
-  inset: 0;
-  background: rgba(248, 250, 252, 0.7);
-}
-
-.tooth-ov-x {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.6rem;
-  font-weight: 800;
-  color: #dc2626;
-  pointer-events: none;
-  text-shadow: 0 1px 0 #fff;
-}
-
-/* Molars — filling/decay on occlusal (wider zone) */
-.dental-chart-wrap .tc-molar1 .tooth-ov.filling,
-.dental-chart-wrap .tc-molar2 .tooth-ov.filling,
-.dental-chart-wrap .tc-molar3 .tooth-ov.filling,
-.dental-chart-wrap .tc-dcMolar1 .tooth-ov.filling,
-.dental-chart-wrap .tc-dcMolar2 .tooth-ov.filling {
-  top: 8%;
-  left: 12%;
-  right: 12%;
-  height: 28%;
-}
-
-/* ── Surface legend (M/D/B/L/O) ── */
-.dc-surface-legend {
-  position: absolute;
-  right: 12px;
-  bottom: 8px;
-  width: 88px;
-  height: 88px;
-  pointer-events: none;
-}
-
-.dc-surf-label {
-  position: absolute;
-  font: 700 10px/1 var(--en-font, "Segoe UI", system-ui, sans-serif);
-  color: #334155;
-}
-
-.dc-surf-m { top: 0; left: 50%; transform: translateX(-50%); }
-.dc-surf-d { top: 50%; right: 0; transform: translateY(-50%); }
-.dc-surf-b { top: 50%; left: 0; transform: translateY(-50%); }
-.dc-surf-l { bottom: 0; left: 50%; transform: translateX(-50%); }
-
-.dc-surf-icon {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 52px;
-  height: 52px;
-  transform: translate(-50%, -50%);
-  border-radius: 50%;
-  background: #fff;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
-  overflow: hidden;
-}
-
-.dc-surf-o {
-  position: absolute;
-  inset: 22%;
-  border-radius: 50%;
-  background: #fbbf24;
-  z-index: 2;
-}
-
-.dc-surf-seg {
-  position: absolute;
-  inset: 0;
-}
-
-.dc-surf-seg-m {
-  clip-path: polygon(50% 50%, 15% 0%, 85% 0%);
-  background: #22c55e;
-}
-
-.dc-surf-seg-d {
-  clip-path: polygon(50% 50%, 100% 15%, 100% 85%);
-  background: #3b82f6;
-}
-
-.dc-surf-seg-b {
-  clip-path: polygon(50% 50%, 15% 100%, 85% 100%);
-  background: #ef4444;
-}
-
-.dc-surf-seg-l {
-  clip-path: polygon(50% 50%, 0% 15%, 0% 85%);
-  background: #eab308;
-}
-
-/* deciduous compact */
-.dental-chart-deciduous .chart-row {
-  gap: 1px;
-}
-
-.dental-chart-deciduous .tooth-num {
-  font-size: 9px;
-}
-
-/* type legend */
-.dc-type-legend {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px 18px;
-  margin-top: 14px;
-  padding: 10px 14px;
-  border-radius: 12px;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-}
-
-.dc-type-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 11px;
-  font-weight: 600;
-  color: #475569;
-}
-
-.dc-type-item i {
-  display: inline-block;
-  width: 14px;
-  height: 18px;
-  border-radius: 3px 3px 1px 1px;
-  background: linear-gradient(180deg, #fff, #e2e8f0);
-  border: 1px solid #94a3b8;
-}
-
-.dc-type-central i { width: 12px; }
-.dc-type-lateral i { width: 10px; transform: skewX(-6deg); }
-.dc-type-canine i {
-  width: 10px;
-  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
-  border-radius: 0;
-  height: 16px;
-}
-.dc-type-premolar i { width: 13px; }
-.dc-type-molar i { width: 16px; }
-
-.dc-orient { display: none; }
 
 /* ── Status popover (light) ── */
 .dc-popover-backdrop {
@@ -589,104 +276,3 @@
   font-weight: 600;
   cursor: pointer;
 }
-
-@media (max-width: 680px) {
-  .dental-chart-wrap .tc-central .tooth-asset-shell,
-  .dental-chart-wrap .tc-lateral .tooth-asset-shell { width: 28px; }
-  .dental-chart-wrap .tc-canine .tooth-asset-shell { width: 32px; }
-  .dental-chart-wrap .tc-premolar1 .tooth-asset-shell,
-  .dental-chart-wrap .tc-premolar2 .tooth-asset-shell { width: 38px; }
-  .dental-chart-wrap .tc-molar1 .tooth-asset-shell { width: 46px; }
-  .dental-chart-wrap .tc-molar2 .tooth-asset-shell { width: 42px; }
-  .dental-chart-wrap .tc-molar3 .tooth-asset-shell { width: 38px; }
-  .dc-chart-inner { min-width: 580px; }
-  .dc-surface-legend { transform: scale(0.85); transform-origin: bottom right; }
-}
-
-/* ── Schematic chart (reference: flat icons, patient-facing order) ── */
-.dental-chart-schematic .tooth-cell-arch {
-  transform: none !important;
-  gap: 4px;
-}
-
-.dental-chart-schematic .arch-mid {
-  width: 2px;
-  min-width: 2px;
-  margin: 0 4px;
-  background: #cbd5e1;
-}
-
-.dental-chart-schematic .tooth-num {
-  font-size: 12px;
-  color: #475569;
-}
-
-.dental-chart-schematic .tooth-schematic-shell {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  line-height: 0;
-}
-
-.dental-chart-schematic .tooth-schematic-svg {
-  display: block;
-  height: 44px;
-  width: auto;
-  max-width: 100%;
-}
-
-.dental-chart-schematic .tooth-schematic-upper {
-  transform: scaleY(-1);
-}
-
-.dental-chart-schematic .tc-central .tooth-schematic-svg,
-.dental-chart-schematic .tc-lateral .tooth-schematic-svg,
-.dental-chart-schematic .tc-dcCentral .tooth-schematic-svg,
-.dental-chart-schematic .tc-dcLateral .tooth-schematic-svg {
-  height: 40px;
-}
-
-.dental-chart-schematic .tc-canine .tooth-schematic-svg,
-.dental-chart-schematic .tc-dcCanine .tooth-schematic-svg {
-  height: 44px;
-}
-
-.dental-chart-schematic .tc-premolar1 .tooth-schematic-svg,
-.dental-chart-schematic .tc-premolar2 .tooth-schematic-svg {
-  height: 46px;
-}
-
-.dental-chart-schematic .tc-molar1 .tooth-schematic-svg,
-.dental-chart-schematic .tc-molar2 .tooth-schematic-svg,
-.dental-chart-schematic .tc-molar3 .tooth-schematic-svg,
-.dental-chart-schematic .tc-dcMolar1 .tooth-schematic-svg,
-.dental-chart-schematic .tc-dcMolar2 .tooth-schematic-svg {
-  height: 48px;
-}
-
-.dental-chart-schematic .dental-chart {
-  padding: 20px 12px 24px;
-}
-
-.dental-chart-schematic .dc-chart-inner {
-  min-width: 640px;
-}
-
-.dental-chart-schematic .tooth-cell:hover {
-  background: rgba(148, 163, 184, 0.12);
-  box-shadow: none;
-}
-
-.dental-chart-schematic .tooth-cell.selected {
-  background: rgba(59, 130, 246, 0.1);
-  box-shadow: 0 0 0 2px #3b82f6;
-}
-
-@media (max-width: 680px) {
-  .dental-chart-schematic .dc-chart-inner { min-width: 520px; }
-  .dental-chart-schematic .tooth-schematic-svg { height: 36px; }
-  .dental-chart-schematic .tc-molar1 .tooth-schematic-svg,
-  .dental-chart-schematic .tc-molar2 .tooth-schematic-svg,
-  .dental-chart-schematic .tc-molar3 .tooth-schematic-svg { height: 40px; }
-}
-

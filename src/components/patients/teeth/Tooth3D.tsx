@@ -1,7 +1,6 @@
 "use client";
 
 import { ToothSchematic } from "../dental-chart/ToothSchematic";
-import { getToothJaw } from "@/lib/tooth";
 import { cn } from "@/lib/cn";
 import type { ToothState } from "@/types/db";
 
@@ -33,5 +32,5 @@ export function getToothStatusStyle(state: ToothState): ToothStatusStyle {
 }
 
 export function Tooth3D({ num, state = "healthy", className }: { num: number; state?: ToothState; className?: string; showShadow?: boolean }) {
-  return <ToothSchematic num={num} status={state} jaw={getToothJaw(num)} className={cn(className)} />;
+  return <ToothSchematic num={num} status={state} className={cn(className)} />;
 }

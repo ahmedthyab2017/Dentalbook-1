@@ -1,65 +1,67 @@
 import { getToothCategory, type ToothCategory } from "@/lib/tooth";
 
-export type SchematicShape = {
-  morph: "incisor" | "canine" | "premolar" | "molar";
-  /** Crown outline path (y grows downward in SVG space). */
-  crown: string;
-  /** Root fill area behind root lines. */
-  rootFill: string;
-  /** Root outline strokes (1–3 paths). */
-  roots: string[];
-  width: number;
-  height: number;
+type ToothMorph = "incisor" | "canine" | "premolar" | "molar";
+
+/** Simple crown-only icon geometry — one shape per anatomical morphology. */
+export type ToothIconShape =
+  | { kind: "capsule"; w: number; h: number }
+  | { kind: "leaf"; w: number; h: number }
+  | { kind: "flower"; size: number };
+
+const MORPH_BY_CATEGORY: Record<ToothCategory, ToothMorph> = {
+  central: "incisor",
+  lateral: "incisor",
+  canine: "canine",
+  premolar1: "premolar",
+  premolar2: "premolar",
+  molar1: "molar",
+  molar2: "molar",
+  molar3: "molar",
+  dcCentral: "incisor",
+  dcLateral: "incisor",
+  dcCanine: "canine",
+  dcMolar1: "molar",
+  dcMolar2: "molar",
 };
 
-function morphFromCategory(cat: ToothCategory): SchematicShape["morph"] {
-  if (cat === "central" || cat === "lateral" || cat === "dcCentral" || cat === "dcLateral") return "incisor";
-  if (cat === "canine" || cat === "dcCanine") return "canine";
-  if (cat === "premolar1" || cat === "premolar2") return "premolar";
-  return "molar";
+const SHAPE_BY_MORPH: Record<ToothMorph, ToothIconShape> = {
+  incisor: { kind: "capsule", w: 20, h: 40 },
+  canine: { kind: "leaf", w: 22, h: 42 },
+  premolar: { kind: "capsule", w: 27, h: 40 },
+  molar: { kind: "flower", size: 34 },
+};
+
+/** Crown-only outline icon per tooth, matching the reference FDI chart widget. */
+export function getToothIconShape(num: number): ToothIconShape {
+  return SHAPE_BY_MORPH[MORPH_BY_CATEGORY[getToothCategory(num)]];
 }
 
-/** Flat schematic tooth icons — matches standard dental chart reference. */
-export function getSchematicShape(num: number): SchematicShape {
-  const cat = getToothCategory(num);
-  const morph = morphFromCategory(cat);
+export function iconBounds(shape: ToothIconShape): { w: number; h: number } {
+  return shape.kind === "flower" ? { w: shape.size, h: shape.size } : { w: shape.w, h: shape.h };
+}
 
-  switch (morph) {
-    case "incisor":
-      return {
-        morph,
-        width: 26,
-        height: 48,
-        crown: "M 6 24 L 6 9 Q 13 5 20 9 L 20 24 Z",
-        rootFill: "M 7 24 L 19 24 L 19 44 L 7 44 Z",
-        roots: ["M 13 24 L 13 44"],
-      };
-    case "canine":
-      return {
-        morph,
-        width: 24,
-        height: 50,
-        crown: "M 12 24 L 12 12 L 18 4 L 24 12 L 24 24 Z",
-        rootFill: "M 13 24 L 23 24 L 23 46 L 13 46 Z",
-        roots: ["M 18 24 L 18 46"],
-      };
-    case "premolar":
-      return {
-        morph,
-        width: 28,
-        height: 50,
-        crown: "M 6 24 L 6 13 Q 9 8 14 10 Q 18 7 22 10 Q 27 8 30 13 L 30 24 Z",
-        rootFill: "M 7 24 L 29 24 L 29 45 L 7 45 Z",
-        roots: ["M 13 24 L 13 44", "M 23 24 L 23 44"],
-      };
-    default:
-      return {
-        morph: "molar",
-        width: 36,
-        height: 52,
-        crown: "M 4 24 L 4 14 Q 7 9 12 11 Q 16 7 20 10 Q 24 7 28 10 Q 33 9 36 14 L 36 24 Z",
-        rootFill: "M 5 24 L 35 24 L 35 46 L 5 46 Z",
-        roots: ["M 11 24 L 11 45", "M 20 24 L 20 45", "M 29 24 L 29 45"],
-      };
-  }
+/** Pointed capsule (rounded bottom, single peak at top) — canine icon. */
+export function leafPath(w: number, h: number): string {
+  const r = w / 2;
+  return [
+    `M 0 ${h - r}`,
+    `A ${r} ${r} 0 0 0 ${w} ${h - r}`,
+    `Q ${w} ${h * 0.22} ${w / 2} 0`,
+    `Q 0 ${h * 0.22} 0 ${h - r}`,
+    "Z",
+  ].join(" ");
+}
+
+/** Rounded four-petal outline — molar icon. */
+export function flowerPath(size: number): string {
+  const r = size / 2;
+  const c = size / 2;
+  return [
+    `M ${c} 0`,
+    `A ${r} ${r} 0 0 1 ${size} ${c}`,
+    `A ${r} ${r} 0 0 1 ${c} ${size}`,
+    `A ${r} ${r} 0 0 1 0 ${c}`,
+    `A ${r} ${r} 0 0 1 ${c} 0`,
+    "Z",
+  ].join(" ");
 }

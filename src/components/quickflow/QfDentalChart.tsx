@@ -1,7 +1,7 @@
 "use client";
 
 import { ToothCell } from "@/components/patients/teeth/ToothCell";
-import { DentalChart, archStyle, type DentalChartRenderProps } from "@/components/patients/DentalChart";
+import { DentalChart, type DentalChartRenderProps } from "@/components/patients/DentalChart";
 import type { ToothState } from "@/types/db";
 import "./qf-dental-chart.css";
 
@@ -26,7 +26,7 @@ export function QfDentalChart({
   chart?: Record<string, ToothState | string>;
   lang?: "ar" | "en";
 }) {
-  function renderTooth({ num, jaw, state, selected: isSel, archIdx, archSide, archCount }: DentalChartRenderProps) {
+  function renderTooth({ num, jaw, state, selected: isSel }: DentalChartRenderProps) {
     return (
       <ToothCell
         key={num}
@@ -34,7 +34,6 @@ export function QfDentalChart({
         jaw={jaw}
         state={state}
         selected={isSel}
-        archStyle={archStyle()}
         onClick={() => onToggle(num)}
         wrapClassName="qf-tooth-wrap"
         cellClassName="qf-tooth-cell"
@@ -45,7 +44,6 @@ export function QfDentalChart({
 
   return (
     <div className="qf-dental-chart">
-      <p className="qf-dc-scroll-hint">{lang === "ar" ? "← مرّر لعرض جميع الأسنان →" : "← Scroll to see all teeth →"}</p>
       <DentalChart
         className="qf-dc-shared"
         lang={lang}

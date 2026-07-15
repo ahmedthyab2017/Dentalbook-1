@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, type CSSProperties, type ReactNode } from "react";
-import { ToothStatusPopover, buildArchLayout } from "./dental-chart";
+import { useState, type ReactNode } from "react";
+import { ToothStatusPopover } from "./dental-chart";
 import { ToothCell } from "./teeth/ToothCell";
 import { DENTITION_LABELS, getArchTeeth, type Dentition } from "@/lib/tooth";
 import type { ToothState } from "@/types/db";
@@ -12,9 +12,6 @@ export type DentalChartRenderProps = {
   state: ToothState;
   selected: boolean;
   dentition: Dentition;
-  archIdx: number;
-  archSide: "right" | "left";
-  archCount: number;
 };
 
 type DentalChartProps = {
@@ -33,46 +30,31 @@ type DentalChartProps = {
   className?: string;
 };
 
-/** Flat schematic chart — no arch tilt (reference layout). */
-export function archStyle(): CSSProperties {
-  return {};
-}
-
-function quadrantStyle(count: number): CSSProperties {
-  return { "--quadrant-count": count } as CSSProperties;
-}
-
-function defaultRenderTooth(props: DentalChartRenderProps & { onToothClick?: (n: number) => void; lang: "ar" | "en" }) {
-  const { num, jaw, state, selected, onToothClick, lang } = props;
-  return (
-    <ToothCell
-      key={num}
-      num={num}
-      jaw={jaw}
-      state={state}
-      selected={selected}
-      lang={lang}
-      archStyle={archStyle()}
-      onClick={() => onToothClick?.(num)}
-    />
-  );
+function defaultRenderTooth(props: DentalChartRenderProps & { onToothClick?: (n: number) => void }) {
+  const { num, jaw, state, selected, onToothClick } = props;
+  return <ToothCell key={num} num={num} jaw={jaw} state={state} selected={selected} onClick={() => onToothClick?.(num)} />;
 }
 
 export function DentalChart({
-  dentition: dentitionProp, onDentitionChange, showDentitionToggle = true, lang = "ar", chart = {},
-  selected = null, selectedList, onToothClick, onStatusChange, onOpenDetails, showStatusPopover = true,
-  renderTooth, className = "",
+  dentition: dentitionProp,
+  onDentitionChange,
+  showDentitionToggle = true,
+  lang = "ar",
+  chart = {},
+  selected = null,
+  selectedList,
+  onToothClick,
+  onStatusChange,
+  onOpenDetails,
+  showStatusPopover = true,
+  renderTooth,
+  className = "",
 }: DentalChartProps) {
   const [internalDentition, setInternalDentition] = useState<Dentition>("permanent");
   const [popoverNum, setPopoverNum] = useState<number | null>(null);
   const dentition = dentitionProp ?? internalDentition;
   const arch = getArchTeeth(dentition);
-  buildArchLayout(dentition);
-  const isDeciduous = dentition === "deciduous";
   const activePopover = showStatusPopover ? (popoverNum ?? selected) : null;
-  /** Patient view: mesial→distal from midline on each side (11–18, 41–48). */
-  const upperRightDisplay = [...arch.upperRight].reverse();
-  const lowerRightDisplay = [...arch.lowerRight].reverse();
 
   function setDentition(d: Dentition) {
     if (onDentitionChange) onDentitionChange(d);
@@ -84,16 +66,43 @@ export function DentalChart({
     if (showStatusPopover) setPopoverNum(n);
   }
 
-  function renderArchTooth(n: number, jaw: "upper" | "lower", archIdx: number, archSide: "right" | "left", archCount: number) {
+  function renderArchTooth(n: number, jaw: "upper" | "lower") {
     const key = String(n);
     const state = ((chart[key] as ToothState | undefined) || "healthy") as ToothState;
     const isSel = selectedList ? selectedList.includes(key) : selected === n;
-    const props: DentalChartRenderProps = { num: n, jaw, state, selected: isSel, dentition, archIdx, archSide, archCount };
-    return renderTooth ? renderTooth(props) : defaultRenderTooth({ ...props, onToothClick: handleToothClick, lang });
+    const props: DentalChartRenderProps = { num: n, jaw, state, selected: isSel, dentition };
+    return renderTooth ? renderTooth(props) : defaultRenderTooth({ ...props, onToothClick: handleToothClick });
+  }
+
+  /**
+   * Natural FDI order, no reversal — right quadrant then left quadrant:
+   *   upper: 18 17 16 15 14 13 12 11 | 21 22 23 24 25 26 27 28
+   *   lower: 48 47 46 45 44 43 42 41 | 31 32 33 34 35 36 37 38
+   */
+  function renderRow(jaw: "upper" | "lower", right: number[], left: number[]) {
+    return (
+      <div className="chart-row">
+        <div className="chart-quadrant">
+          {right.map((n) => (
+            <div className="tooth-slot" key={n}>
+              {renderArchTooth(n, jaw)}
+            </div>
+          ))}
+        </div>
+        <span className="arch-mid" aria-hidden />
+        <div className="chart-quadrant">
+          {left.map((n) => (
+            <div className="tooth-slot" key={n}>
+              {renderArchTooth(n, jaw)}
+            </div>
+          ))}
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className={`dental-chart-wrap dental-chart-light dental-chart-schematic ${className}`.trim()}>
+    <div className={`dental-chart-wrap ${className}`.trim()}>
       {showDentitionToggle && (
         <div className="dc-dentition-bar">
           {(["permanent", "deciduous"] as Dentition[]).map((d) => (
@@ -103,49 +112,11 @@ export function DentalChart({
           ))}
         </div>
       )}
-      <div className={`dental-chart${isDeciduous ? " dental-chart-deciduous" : ""}`}>
+      <div className="dental-chart">
         <div className="dc-chart-inner">
-          <div className="chart-arch upper">
-            <p className="dc-arch-label">{lang === "ar" ? "الفك العلوي" : "Upper Jaw"}</p>
-            <div className="chart-row">
-              <div className="chart-quadrant chart-quadrant-patient-left" style={quadrantStyle(arch.upperLeft.length)}>
-                {arch.upperLeft.map((n, i) => (
-                  <div className="tooth-slot" key={n}>
-                    {renderArchTooth(n, "upper", i, "left", arch.upperLeft.length)}
-                  </div>
-                ))}
-              </div>
-              <span className="arch-mid" aria-hidden />
-              <div className="chart-quadrant chart-quadrant-patient-right" style={quadrantStyle(upperRightDisplay.length)}>
-                {upperRightDisplay.map((n, i) => (
-                  <div className="tooth-slot" key={n}>
-                    {renderArchTooth(n, "upper", i, "right", upperRightDisplay.length)}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+          <div className="chart-arch upper">{renderRow("upper", arch.upperRight, arch.upperLeft)}</div>
           <div className="dc-jaw-divider" aria-hidden />
-          <div className="chart-arch lower">
-            <div className="chart-row">
-              <div className="chart-quadrant chart-quadrant-patient-left" style={quadrantStyle(arch.lowerLeft.length)}>
-                {arch.lowerLeft.map((n, i) => (
-                  <div className="tooth-slot" key={n}>
-                    {renderArchTooth(n, "lower", i, "left", arch.lowerLeft.length)}
-                  </div>
-                ))}
-              </div>
-              <span className="arch-mid" aria-hidden />
-              <div className="chart-quadrant chart-quadrant-patient-right" style={quadrantStyle(lowerRightDisplay.length)}>
-                {lowerRightDisplay.map((n, i) => (
-                  <div className="tooth-slot" key={n}>
-                    {renderArchTooth(n, "lower", i, "right", lowerRightDisplay.length)}
-                  </div>
-                ))}
-              </div>
-            </div>
-            <p className="dc-arch-label">{lang === "ar" ? "الفك السفلي" : "Lower Jaw"}</p>
-          </div>
+          <div className="chart-arch lower">{renderRow("lower", arch.lowerRight, arch.lowerLeft)}</div>
         </div>
       </div>
       <ToothStatusPopover
@@ -153,9 +124,21 @@ export function DentalChart({
         num={activePopover}
         currentState={((activePopover != null && (chart[String(activePopover)] as ToothState | undefined)) || "healthy") as ToothState}
         lang={lang}
-        onSelect={(state) => { if (activePopover != null) { onStatusChange?.(activePopover, state); setPopoverNum(null); } }}
+        onSelect={(state) => {
+          if (activePopover != null) {
+            onStatusChange?.(activePopover, state);
+            setPopoverNum(null);
+          }
+        }}
         onClose={() => setPopoverNum(null)}
-        onDetails={onOpenDetails && activePopover != null ? () => { onOpenDetails(activePopover); setPopoverNum(null); } : undefined}
+        onDetails={
+          onOpenDetails && activePopover != null
+            ? () => {
+                onOpenDetails(activePopover);
+                setPopoverNum(null);
+              }
+            : undefined
+        }
       />
     </div>
   );
