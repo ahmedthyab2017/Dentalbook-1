@@ -23,11 +23,15 @@
 
 /* Explicit px min-width (not max-content) so the width chain never collapses
    back to the scroll container's own width. 2 quadrants × 8 teeth × 44px
-   + gaps + the center divider. */
+   + gaps + the center divider.
+   IMPORTANT: no auto-centering here (margin/justify-content:center) — when
+   content is wider than an overflow:auto box, centering pushes the "start"
+   half into negative scroll territory that the user can NEVER scroll back
+   to, permanently hiding 21-28/31-38. Everything must start flush left. */
 .qf-dc-shared .dc-chart-inner {
   min-width: 900px;
   width: max-content;
-  margin: 0 auto;
+  margin: 0;
 }
 
 .qf-dc-shared .chart-row {
@@ -36,7 +40,7 @@
   grid-template-columns: unset;
   gap: 0;
   margin-bottom: 0;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 .qf-dc-shared .chart-quadrant {
