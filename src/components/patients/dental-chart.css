@@ -149,27 +149,145 @@
   box-shadow: 0 0 0 2px #3b82f6;
 }
 
-/* ── Tooth crown icon (SVG) ── */
-.tooth-schematic-shell {
+/* ── Realistic tooth crown (asset SVG) ── */
+.tooth-asset-shell {
+  position: relative;
   display: flex;
   width: 100%;
   justify-content: center;
+  align-items: center;
   line-height: 0;
 }
 
-.tooth-schematic-svg {
+.tooth-asset-body {
+  position: relative;
+  display: inline-flex;
+  line-height: 0;
+}
+
+/* Default asset orientation is a lower tooth (crown pointing up); flip
+   vertically for the upper arch so crowns point down toward the occlusal
+   plane, matching how the two arches actually face each other. */
+.tooth-asset-upper {
+  transform: scaleY(-1);
+}
+
+.tooth-asset-img {
   display: block;
-  width: 68%;
-  max-width: 40px;
+  width: 100%;
   height: auto;
+  filter: drop-shadow(0 2px 4px rgba(15, 23, 42, 0.12));
+  user-select: none;
+}
+
+.tooth-cell:hover .tooth-asset-img {
+  filter: drop-shadow(0 4px 8px rgba(15, 23, 42, 0.18));
+}
+
+.tooth-cell.selected .tooth-asset-img {
+  filter: drop-shadow(0 5px 10px rgba(59, 130, 246, 0.3));
+}
+
+/* Per-morphology widths so incisors stay slim and molars read wide,
+   same visual proportions as the reference chart. */
+.dental-chart-wrap .tooth-asset-shell[data-tooth-morph="central"],
+.dental-chart-wrap .tooth-asset-shell[data-tooth-morph="lateral"] {
+  width: min(64%, 34px);
+}
+
+.dental-chart-wrap .tooth-asset-shell[data-tooth-morph="canine"] {
+  width: min(70%, 38px);
+}
+
+.dental-chart-wrap .tooth-asset-shell[data-tooth-morph="premolar"] {
+  width: min(76%, 46px);
+}
+
+.dental-chart-wrap .tooth-asset-shell[data-tooth-morph="molar"] {
+  width: min(82%, 56px);
+}
+
+/* ── Status overlays on crown ── */
+.tooth-ov {
+  position: absolute;
+  pointer-events: none;
+  border-radius: 5px;
+}
+
+.tooth-ov.decay,
+.tooth-ov.rct {
+  top: 22%;
+  left: 18%;
+  right: 18%;
+  height: 26%;
+  background: rgba(239, 68, 68, 0.55);
+  border-radius: 4px 4px 10px 10px;
+}
+
+.tooth-ov.filling {
+  top: 26%;
+  left: 22%;
+  right: 22%;
+  height: 22%;
+  background: rgba(59, 130, 246, 0.5);
+  border-radius: 8px;
+}
+
+.tooth-ov.crown-full {
+  inset: 6%;
+  background: rgba(212, 175, 55, 0.42);
+  border-radius: 10px;
+}
+
+.tooth-ov.implant {
+  top: 40%;
+  left: 26%;
+  right: 26%;
+  height: 48%;
+  background: linear-gradient(180deg, rgba(148, 163, 184, 0.2), rgba(100, 116, 139, 0.4));
+  border-radius: 3px;
+}
+
+.tooth-ov.missing {
+  inset: 0;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 8px;
+}
+
+.tooth-ov.extraction {
+  inset: 0;
+  background: rgba(248, 250, 252, 0.72);
+}
+
+.tooth-ov-x {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #dc2626;
+  pointer-events: none;
+  text-shadow: 0 1px 0 #fff;
 }
 
 @media (max-width: 680px) {
   .dental-chart-wrap .dental-chart {
     padding: 18px 10px 22px;
   }
-  .tooth-schematic-svg {
-    max-width: 32px;
+  .dental-chart-wrap .tooth-asset-shell[data-tooth-morph="central"],
+  .dental-chart-wrap .tooth-asset-shell[data-tooth-morph="lateral"] {
+    width: min(64%, 27px);
+  }
+  .dental-chart-wrap .tooth-asset-shell[data-tooth-morph="canine"] {
+    width: min(70%, 31px);
+  }
+  .dental-chart-wrap .tooth-asset-shell[data-tooth-morph="premolar"] {
+    width: min(76%, 38px);
+  }
+  .dental-chart-wrap .tooth-asset-shell[data-tooth-morph="molar"] {
+    width: min(82%, 46px);
   }
   .tooth-num {
     font-size: 11px;

@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/cn";
+import { getToothType } from "@/lib/tooth";
 import type { ToothState } from "@/types/db";
 import { getToothAssetSrc } from "./toothAssets";
 
@@ -42,7 +43,7 @@ export function ToothAssetSvg({
   const upper = jaw === "upper";
 
   return (
-    <span className={cn("tooth-asset-shell", className)}>
+    <span className={cn("tooth-asset-shell", className)} data-tooth-morph={getToothType(num)}>
       <span className={cn("tooth-asset-body", upper && "tooth-asset-upper")}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={src} alt="" className="tooth-asset-img" draggable={false} />

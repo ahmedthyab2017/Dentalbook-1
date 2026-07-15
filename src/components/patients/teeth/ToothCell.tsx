@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ToothSchematic } from "../dental-chart/ToothSchematic";
+import { ToothAssetSvg } from "../dental-chart/ToothAssetSvg";
 import type { ToothState } from "@/types/db";
 import { cn } from "@/lib/cn";
 
@@ -39,7 +39,7 @@ export function ToothCell({
         whileTap={{ scale: 0.95 }}
         transition={{ duration: 0.15, ease: "easeOut" }}
       >
-        <ToothSchematic num={num} status={state} className="tooth-svg" />
+        <ToothAssetSvg num={num} status={state} jaw={jaw} />
       </motion.button>
       {jaw === "lower" && <span className="tooth-num tooth-num-bottom">{num}</span>}
     </div>

@@ -40,9 +40,21 @@
   box-shadow: 0 0 0 2px #3b82f6;
 }
 
-.qf-dc-shared .tooth-schematic-svg {
-  width: 74%;
-  max-width: 34px;
+.qf-dc-shared .tooth-asset-shell[data-tooth-morph="central"],
+.qf-dc-shared .tooth-asset-shell[data-tooth-morph="lateral"] {
+  width: min(70%, 30px);
+}
+
+.qf-dc-shared .tooth-asset-shell[data-tooth-morph="canine"] {
+  width: min(76%, 34px);
+}
+
+.qf-dc-shared .tooth-asset-shell[data-tooth-morph="premolar"] {
+  width: min(80%, 40px);
+}
+
+.qf-dc-shared .tooth-asset-shell[data-tooth-morph="molar"] {
+  width: min(86%, 46px);
 }
 
 .qf-tooth-wrap .tooth-num {
@@ -133,8 +145,18 @@
 }
 
 @media (max-width: 480px) {
-  .qf-dc-shared .tooth-schematic-svg {
-    max-width: 26px;
+  .qf-dc-shared .tooth-asset-shell[data-tooth-morph="central"],
+  .qf-dc-shared .tooth-asset-shell[data-tooth-morph="lateral"] {
+    width: min(70%, 24px);
+  }
+  .qf-dc-shared .tooth-asset-shell[data-tooth-morph="canine"] {
+    width: min(76%, 27px);
+  }
+  .qf-dc-shared .tooth-asset-shell[data-tooth-morph="premolar"] {
+    width: min(80%, 32px);
+  }
+  .qf-dc-shared .tooth-asset-shell[data-tooth-morph="molar"] {
+    width: min(86%, 37px);
   }
   .qf-tooth-wrap .tooth-num {
     font-size: 10px;
