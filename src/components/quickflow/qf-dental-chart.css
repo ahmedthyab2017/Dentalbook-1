@@ -1,11 +1,33 @@
 /* QuickFlow dental chart — full 32-tooth arch, scrollable, fixed column widths */
 .qf-dental-chart {
-  direction: ltr;
   margin-bottom: 0.75rem;
+  max-width: 100%;
+}
+
+.qf-dc-shared.dental-chart-wrap,
+.qf-dental-chart .qf-dc-shared {
+  direction: ltr;
+  width: 100%;
+}
+
+/* The bordered card is the ONE scroll boundary — it must keep a definite
+   width (100% of its parent) so its content (dc-chart-inner) can be wider
+   and trigger a real horizontal scrollbar via overflow-x:auto. */
+.qf-dc-shared .dental-chart {
+  width: 100%;
+  padding: 1rem 0.75rem 1.25rem;
   overflow-x: auto;
   overflow-y: visible;
-  max-width: 100%;
   -webkit-overflow-scrolling: touch;
+}
+
+/* Explicit px min-width (not max-content) so the width chain never collapses
+   back to the scroll container's own width. 2 quadrants × 8 teeth × 44px
+   + gaps + the center divider. */
+.qf-dc-shared .dc-chart-inner {
+  min-width: 900px;
+  width: max-content;
+  margin: 0 auto;
 }
 
 .qf-dc-shared .chart-row {
@@ -14,8 +36,6 @@
   grid-template-columns: unset;
   gap: 0;
   margin-bottom: 0;
-  width: max-content;
-  min-width: 100%;
   justify-content: center;
 }
 
@@ -24,21 +44,6 @@
   flex: 0 0 auto;
   grid-template-columns: repeat(var(--quadrant-count, 8), 44px);
   gap: 2px;
-  min-width: calc(var(--quadrant-count, 8) * 44px + (var(--quadrant-count, 8) - 1) * 2px);
-}
-
-.qf-dc-shared .dental-chart {
-  min-width: 0;
-  width: 100%;
-  padding: 1rem 0.75rem 1.25rem;
-  overflow-x: visible;
-  overflow-y: visible;
-}
-
-.qf-dc-shared .dc-chart-inner {
-  width: max-content;
-  min-width: 100%;
-  margin: 0 auto;
 }
 
 .qf-dc-shared .dc-type-legend {
@@ -47,13 +52,6 @@
 
 .qf-dc-shared .dc-dentition-bar {
   margin-bottom: 0.75rem;
-}
-
-.qf-dc-shared.dental-chart-wrap,
-.qf-dental-chart .qf-dc-shared {
-  width: max-content;
-  min-width: 100%;
-  overflow: visible;
 }
 
 .qf-dc-shared .chart-arch.upper {
@@ -258,9 +256,12 @@
 }
 
 @media (max-width: 760px) {
+  .qf-dc-shared .dc-chart-inner {
+    min-width: 780px;
+  }
+
   .qf-dc-shared .chart-quadrant {
     grid-template-columns: repeat(var(--quadrant-count, 8), 38px);
-    min-width: calc(var(--quadrant-count, 8) * 38px + (var(--quadrant-count, 8) - 1) * 2px);
   }
 
   .qf-dc-shared .tooth-slot {
