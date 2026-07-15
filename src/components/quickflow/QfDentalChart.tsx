@@ -34,7 +34,7 @@ export function QfDentalChart({
         jaw={jaw}
         state={state}
         selected={isSel}
-        archStyle={archStyle(archIdx, archCount, archSide, jaw)}
+        archStyle={archStyle()}
         onClick={() => onToggle(num)}
         wrapClassName="qf-tooth-wrap"
         cellClassName="qf-tooth-cell"

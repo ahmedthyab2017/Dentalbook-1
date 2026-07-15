@@ -586,3 +586,91 @@
   .dc-chart-inner { min-width: 580px; }
   .dc-surface-legend { transform: scale(0.85); transform-origin: bottom right; }
 }
+
+/* ── Schematic chart (reference: flat icons, patient-facing order) ── */
+.dental-chart-schematic .tooth-cell-arch {
+  transform: none !important;
+  gap: 4px;
+}
+
+.dental-chart-schematic .arch-mid {
+  width: 2px;
+  min-width: 2px;
+  margin: 0 4px;
+  background: #cbd5e1;
+}
+
+.dental-chart-schematic .tooth-num {
+  font-size: 12px;
+  color: #475569;
+}
+
+.dental-chart-schematic .tooth-schematic-shell {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  line-height: 0;
+}
+
+.dental-chart-schematic .tooth-schematic-svg {
+  display: block;
+  height: 44px;
+  width: auto;
+  max-width: 100%;
+}
+
+.dental-chart-schematic .tooth-schematic-upper {
+  transform: scaleY(-1);
+}
+
+.dental-chart-schematic .tc-central .tooth-schematic-svg,
+.dental-chart-schematic .tc-lateral .tooth-schematic-svg,
+.dental-chart-schematic .tc-dcCentral .tooth-schematic-svg,
+.dental-chart-schematic .tc-dcLateral .tooth-schematic-svg {
+  height: 40px;
+}
+
+.dental-chart-schematic .tc-canine .tooth-schematic-svg,
+.dental-chart-schematic .tc-dcCanine .tooth-schematic-svg {
+  height: 44px;
+}
+
+.dental-chart-schematic .tc-premolar1 .tooth-schematic-svg,
+.dental-chart-schematic .tc-premolar2 .tooth-schematic-svg {
+  height: 46px;
+}
+
+.dental-chart-schematic .tc-molar1 .tooth-schematic-svg,
+.dental-chart-schematic .tc-molar2 .tooth-schematic-svg,
+.dental-chart-schematic .tc-molar3 .tooth-schematic-svg,
+.dental-chart-schematic .tc-dcMolar1 .tooth-schematic-svg,
+.dental-chart-schematic .tc-dcMolar2 .tooth-schematic-svg {
+  height: 48px;
+}
+
+.dental-chart-schematic .dental-chart {
+  padding: 20px 12px 24px;
+}
+
+.dental-chart-schematic .dc-chart-inner {
+  min-width: 640px;
+}
+
+.dental-chart-schematic .tooth-cell:hover {
+  background: rgba(148, 163, 184, 0.12);
+  box-shadow: none;
+}
+
+.dental-chart-schematic .tooth-cell.selected {
+  background: rgba(59, 130, 246, 0.1);
+  box-shadow: 0 0 0 2px #3b82f6;
+}
+
+@media (max-width: 680px) {
+  .dental-chart-schematic .dc-chart-inner { min-width: 520px; }
+  .dental-chart-schematic .tooth-schematic-svg { height: 36px; }
+  .dental-chart-schematic .tc-molar1 .tooth-schematic-svg,
+  .dental-chart-schematic .tc-molar2 .tooth-schematic-svg,
+  .dental-chart-schematic .tc-molar3 .tooth-schematic-svg { height: 40px; }
+}
+

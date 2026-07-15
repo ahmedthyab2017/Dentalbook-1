@@ -1,3 +1,4 @@
+export { ToothSchematic } from "./ToothSchematic";
 export { ToothAssetSvg } from "./ToothAssetSvg";
 export { getToothAssetSrc, getToothAssetId } from "./toothAssets";
 export { SurfaceLegend } from "./SurfaceLegend";

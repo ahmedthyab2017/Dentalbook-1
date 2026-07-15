@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, type CSSProperties, type ReactNode } from "react";
-import { ToothStatusPopover, buildArchLayout, SurfaceLegend } from "./dental-chart";
+import { ToothStatusPopover, buildArchLayout } from "./dental-chart";
 import { ToothCell } from "./teeth/ToothCell";
-import { DENTITION_LABELS, TOOTH_TYPE_LABELS, getArchTeeth, type Dentition } from "@/lib/tooth";
+import { DENTITION_LABELS, getArchTeeth, type Dentition } from "@/lib/tooth";
 import type { ToothState } from "@/types/db";
 
 export type DentalChartRenderProps = {
@@ -33,16 +33,9 @@ type DentalChartProps = {
   className?: string;
 };
 
-/** Curvature from midline — kept subtle so teeth stay readable in a row. */
-export function archStyle(idx: number, count: number, side: "right" | "left", jaw: "upper" | "lower"): CSSProperties {
-  const fromMid = side === "right" ? count - 1 - idx : idx;
-  const sign = side === "right" ? 1 : -1;
-  const jawSign = jaw === "upper" ? 1 : -1;
-  const t = count > 1 ? fromMid / (count - 1) : 0;
-  const angleDeg = t * 14;
-  const angleRad = (angleDeg * Math.PI) / 180;
-  const lift = 22 * (1 - Math.cos(angleRad)) * jawSign;
-  return { "--arch-tilt": `${sign * angleDeg * 0.4}deg`, "--arch-lift": `${lift}px` } as CSSProperties;
+/** Flat schematic chart — no arch tilt (reference layout). */
+export function archStyle(): CSSProperties {
+  return {};
 }
 
 function quadrantStyle(count: number): CSSProperties {
@@ -50,9 +43,18 @@ function quadrantStyle(count: number): CSSProperties {
 }
 
 function defaultRenderTooth(props: DentalChartRenderProps & { onToothClick?: (n: number) => void; lang: "ar" | "en" }) {
-  const { num, jaw, state, selected, onToothClick, archIdx, archSide, archCount, lang } = props;
+  const { num, jaw, state, selected, onToothClick, lang } = props;
   return (
-    <ToothCell key={num} num={num} jaw={jaw} state={state} selected={selected} lang={lang} archStyle={archStyle(archIdx, archCount, archSide, jaw)} onClick={() => onToothClick?.(num)} />
+    <ToothCell
+      key={num}
+      num={num}
+      jaw={jaw}
+      state={state}
+      selected={selected}
+      lang={lang}
+      archStyle={archStyle()}
+      onClick={() => onToothClick?.(num)}
+    />
   );
 }
 
@@ -68,6 +70,8 @@ export function DentalChart({
   buildArchLayout(dentition);
   const isDeciduous = dentition === "deciduous";
   const activePopover = showStatusPopover ? (popoverNum ?? selected) : null;
+  /** Patient-facing row order: left quadrant mesial→distal, right quadrant distal→mesial (41→48). */
+  const lowerRightDisplay = [...arch.lowerRight].reverse();
 
   function setDentition(d: Dentition) {
     if (onDentitionChange) onDentitionChange(d);
@@ -88,7 +92,7 @@ export function DentalChart({
   }
 
   return (
-    <div className={`dental-chart-wrap dental-chart-light ${className}`.trim()}>
+    <div className={`dental-chart-wrap dental-chart-light dental-chart-schematic ${className}`.trim()}>
       {showDentitionToggle && (
         <div className="dc-dentition-bar">
           {(["permanent", "deciduous"] as Dentition[]).map((d) => (
@@ -102,18 +106,18 @@ export function DentalChart({
         <div className="dc-chart-inner">
           <div className="chart-arch upper">
             <div className="chart-row">
-              <div className="chart-quadrant chart-quadrant-right" style={quadrantStyle(arch.upperRight.length)}>
-                {arch.upperRight.map((n, i) => (
+              <div className="chart-quadrant chart-quadrant-patient-left" style={quadrantStyle(arch.upperLeft.length)}>
+                {arch.upperLeft.map((n, i) => (
                   <div className="tooth-slot" key={n}>
-                    {renderArchTooth(n, "upper", i, "right", arch.upperRight.length)}
+                    {renderArchTooth(n, "upper", i, "left", arch.upperLeft.length)}
                   </div>
                 ))}
               </div>
               <span className="arch-mid" aria-hidden />
-              <div className="chart-quadrant chart-quadrant-left" style={quadrantStyle(arch.upperLeft.length)}>
-                {arch.upperLeft.map((n, i) => (
+              <div className="chart-quadrant chart-quadrant-patient-right" style={quadrantStyle(arch.upperRight.length)}>
+                {arch.upperRight.map((n, i) => (
                   <div className="tooth-slot" key={n}>
-                    {renderArchTooth(n, "upper", i, "left", arch.upperLeft.length)}
+                    {renderArchTooth(n, "upper", i, "right", arch.upperRight.length)}
                   </div>
                 ))}
               </div>
@@ -122,33 +126,24 @@ export function DentalChart({
           <div className="dc-jaw-divider" aria-hidden />
           <div className="chart-arch lower">
             <div className="chart-row">
-              <div className="chart-quadrant chart-quadrant-right" style={quadrantStyle(arch.lowerRight.length)}>
-                {arch.lowerRight.map((n, i) => (
-                  <div className="tooth-slot" key={n}>
-                    {renderArchTooth(n, "lower", i, "right", arch.lowerRight.length)}
-                  </div>
-                ))}
-              </div>
-              <span className="arch-mid" aria-hidden />
-              <div className="chart-quadrant chart-quadrant-left" style={quadrantStyle(arch.lowerLeft.length)}>
+              <div className="chart-quadrant chart-quadrant-patient-left" style={quadrantStyle(arch.lowerLeft.length)}>
                 {arch.lowerLeft.map((n, i) => (
                   <div className="tooth-slot" key={n}>
                     {renderArchTooth(n, "lower", i, "left", arch.lowerLeft.length)}
                   </div>
                 ))}
               </div>
+              <span className="arch-mid" aria-hidden />
+              <div className="chart-quadrant chart-quadrant-patient-right" style={quadrantStyle(lowerRightDisplay.length)}>
+                {lowerRightDisplay.map((n, i) => (
+                  <div className="tooth-slot" key={n}>
+                    {renderArchTooth(n, "lower", i, "right", lowerRightDisplay.length)}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
-          <SurfaceLegend lang={lang} />
         </div>
-      </div>
-      <div className="dc-type-legend">
-        {(["central", "lateral", "canine", ...(isDeciduous ? [] : (["premolar"] as const)), "molar"] as const).map((type) => (
-          <span className={`dc-type-item dc-type-${type}`} key={type}>
-            <i aria-hidden />
-            {lang === "ar" ? TOOTH_TYPE_LABELS[type].ar : TOOTH_TYPE_LABELS[type].en}
-          </span>
-        ))}
       </div>
       <ToothStatusPopover
         open={activePopover != null}
